@@ -1,0 +1,23 @@
+{
+  "name": "booking-clone",
+  "version": "1.0.0",
+  "description": "A clone of booking.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zwiq123/booking-clone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zwiq123/booking-clone/issues"
+  },
+  "homepage": "https://github.com/zwiq123/booking-clone#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

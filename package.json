@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/zwiq123/booking-clone#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/client": "^7.4.2",
+    "express": "^5.2.1",
+    "prisma": "^7.4.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

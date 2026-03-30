@@ -12,12 +12,17 @@ datasource db {
   provider  = "postgresql"
 }
 
+// -----USERS-----
+
 model User {
-  id      Int     @id @default(autoincrement())
-  email   String
-  name    String
-  roleId  Int
-  role    Role    @relation(fields: [roleId], references: [id])
+  id            Int     @id @default(autoincrement())
+  email         String
+  name          String
+  passwordHash  String
+  roleId        Int
+  role          Role    @relation(fields: [roleId], references: [id])
+  properties    Property[]
+  reviews       Review[]
 
   @@unique([email, roleId])
 }
@@ -28,3 +33,99 @@ model Role {
   users User[]
 }
 
+// -----PROPERTIES-----
+
+model Property {
+  id              Int  @id @default(autoincrement())
+  name            String
+  description     String
+  address         Address?
+  
+  ownerId         Int
+  owner           User  @relation(fields: [ownerId], references: [id])
+  
+  statusId        Int
+  status          PropertyStatus  @relation(fields: [statusId], references: [id])
+  
+  propertyTypeId  Int
+  type            PropertyType  @relation(fields: [propertyTypeId], references: [id])
+  
+  images          Image[]
+  reviews         Review[]
+  rooms           Room[]
+}
+
+model PropertyType {
+  id          Int @id @default(autoincrement())
+  name        String  @unique
+  properties  Property[]
+}
+
+// draft, published, suspended
+model PropertyStatus {
+  id          Int @id @default(autoincrement())
+  name        String  @unique 
+  properties  Property[]
+}
+
+// -----ROOMS-----
+
+model Room {
+  id          Int @id @default(autoincrement())
+  propertyId  Int
+  property    Property  @relation(fields: [propertyId], references: [id])
+  capacity    Int
+  // pricing
+}
+
+// -----AMENITIES-----
+
+model Amenity {
+  id          Int @id @default(autoincrement())
+  name        String  @unique
+  categoryId  Int
+  category    AmenityCategory @relation(fields: [categoryId], references: [id])
+}
+
+model AmenityCategory {
+  id        Int @id @default(autoincrement())
+  name      String  @unique
+  amenities Amenity[]
+}
+
+// many-to-many amenities to properties / amenities to rooms
+
+// -----REVIEWS-----
+
+model Review {
+  id          Int @id @default(autoincrement())
+  rating      Int
+  content     String?
+  userId      Int
+  user        User  @relation(fields: [userId], references: [id])
+  propertyId  Int
+  property    Property  @relation(fields: [propertyId], references: [id])
+}
+
+// -----UTILS-----
+
+model Address {
+  id          Int @id @default(autoincrement())
+  latitude    Float
+  longitude   Float
+  country     String
+  state       String
+  city        String
+  postalCode  String
+  street      String
+  propertyId  Int @unique
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id          Int @id @default(autoincrement())
+  path        String
+  isMain      Boolean @default(false)
+  propertyId  Int
+  property    Property  @relation(fields: [propertyId], references: [id])
+}

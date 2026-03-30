@@ -1,0 +1,30 @@
+pricing model
+bookings model
+
+category model + seed
+subcategory model + seed
+
+all seeds
+
+POST /register
+POST /login (jwt)
+
+GET /properties
+GET /properties/:id
+
+POST /properties (host)
+PUT /properties/:id (host)
+DELETE /porperites/:id (host)
+
+GET /properties/:id/rooms
+POST /rooms (host)
+
+POST /bookings
+GET /bookings (jwt) (bookings made by you)
+GET /bookings (jwt) (host) (bookings made for your properties)
+...
+
+POST /reviews (user) (restrict to users who had a booking (successful))
+GET /properties/:id/reviews
+
+...

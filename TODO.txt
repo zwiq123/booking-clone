@@ -6,8 +6,9 @@ subcategory model + seed
 
 all seeds
 
-POST /register
-POST /login (jwt)
+change password
+sorting properties ["near", "random", "best", ...] ??
+payment
 
 GET /properties
 GET /properties/:id
@@ -28,3 +29,5 @@ POST /reviews (user) (restrict to users who had a booking (successful))
 GET /properties/:id/reviews
 
 ...
+
+booking scraping

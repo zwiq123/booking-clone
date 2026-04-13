@@ -15,14 +15,17 @@ datasource db {
 // -----USERS-----
 
 model User {
-  id            Int     @id @default(autoincrement())
-  email         String
-  name          String
-  passwordHash  String
-  roleId        Int
-  role          Role    @relation(fields: [roleId], references: [id])
-  properties    Property[]
-  reviews       Review[]
+  id                  Int     @id @default(autoincrement())
+  email               String
+  firstName           String
+  lastName            String
+  passwordHash        String
+  accountVerified     Boolean
+  roleId              Int
+  verificationToken   VerificationToken?
+  role                Role    @relation(fields: [roleId], references: [id])
+  properties          Property[]
+  reviews             Review[]
 
   @@unique([email, roleId])
 }
@@ -31,6 +34,14 @@ model Role {
   id    Int     @id @default(autoincrement())
   name  String  @unique
   users User[]
+}
+
+model VerificationToken {
+  id              Int     @id @default(autoincrement())
+  token           String  @unique
+  userId          Int     @unique
+  expirationDate  DateTime
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // -----PROPERTIES-----

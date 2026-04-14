@@ -147,6 +147,10 @@ app.post("/login", async (req, res) => {
 
     // checking if user exists
     const roleObject = await prisma.role.findUnique({where: {name: role}});
+    if (!roleObject) {
+        // status
+        return res.status(400).json({message: "Database not initialized"});
+    }
     const user = await prisma.user.findUnique({where: {email_roleId: {email, roleId: roleObject!.id}}, include: {role: true}});
     if (!user) {
         return res.status(401).json({message: "Invalid credentials"});
@@ -192,6 +196,77 @@ app.get("/verify/registration", async (req, res) => {
 
     // redirect ?
     res.json({message: "Account verified. You can now log in."});
+})
+
+const calculateDistance = 
+    (location1: {latitude: number, longitude: number}, 
+     location2: {latitude: number, longitude: number}) => {
+    
+    // E/W  S/N
+
+    return 1;
+}
+
+app.get("/properties", async (req, res) => {
+    const limit = req.query.limit;
+    const sort = req.query.sort;
+    const distance = req.query.distance;
+    // parameters
+
+    const properties = await prisma.property.findMany();
+    console.log(properties);
+    res.send("yo");
+})
+
+app.get("/properties/:id", async (req, res) => {
+    let propertyID;
+    try {
+        propertyID = parseInt(req.params.id);
+    } catch (err) {
+        return res.status(400).json({message: "Incorrect property ID format"});
+    }
+    
+    const property = await prisma.property.findUnique({where: {id: propertyID}});
+
+    if (!property) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found`});
+    }
+
+    res.json(property);
+})
+
+app.get("/properties/:id/rooms", async (req, res) => {
+    let propertyID;
+    try {
+        propertyID = parseInt(req.params.id);
+    } catch (err) {
+        return res.status(400).json({message: "Incorrect property ID format"});
+    }
+
+    const property = await prisma.property.findUnique({where: {id: propertyID}, include: {rooms: true}});
+
+    if (!property) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found`});
+    }
+
+    res.json(property.rooms);
+})
+
+app.get("/properties/:id/reviews", async (req, res) => {
+    let propertyID;
+    try {
+        propertyID = parseInt(req.params.id);
+    } catch (err) {
+        return res.status(400).json({message: "Incorrect property ID format"});
+    }
+
+    const property = await prisma.property.findUnique({where: {id: propertyID}, include: {reviews: true}});
+
+    if (!property) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found`});
+    }
+
+    res.json(property.reviews);
 })
 
 app.listen(PORT, () => {

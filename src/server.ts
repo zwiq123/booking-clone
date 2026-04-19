@@ -95,7 +95,7 @@ app.post("/register", async (req, res) => {
     const existingUser = await prisma.user.findUnique({where: {email_roleId: {email, roleId: roleObject!.id}}});
     
     if (existingUser && existingUser.accountVerified) {
-        return res.json({message: "1Account creation succesfull. You will receive an email with a verification link shortly."});
+        return res.json({message: "1Account creation successfull. You will receive an email with a verification link shortly."});
     }
 
     if (existingUser && !existingUser.accountVerified) {
@@ -137,7 +137,7 @@ app.post("/register", async (req, res) => {
         subject: "Booking clone account verification",
         html: `<p><b>Welcome,</b></p><p>Please verify you email <a href="${verificationLink}">here</a></p>`
     });
-    return res.json({message: "2Account creation succesfull. You will receive an email with a verification link shortly."});
+    return res.json({message: "2Account creation successfull. You will receive an email with a verification link shortly."});
 })
 
 app.post("/login", async (req, res) => {

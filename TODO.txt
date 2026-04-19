@@ -31,3 +31,49 @@ GET /properties/:id/reviews
 ...
 
 booking scraping
+
+host dashboard:
+- properties
+- reservations
+- reviews
+
+-------------
+
+HOUSE:
+whole/single room
+type
+name
+address
+info (rooms with bed count and type, other rooms with beds, max guest count, bathroom count, kids allowed, baby beds provided, optionally size)
+amenities
+amenities 2 (breakfast (included/paid, types), parking (free/paid, where, reservation, public/private))
+languages
+rules (smoking, parties, pets (paid extra), check in/out times)
+additional info (property, owner, surroundings)
+photos
+payment
+price per night
+price info (max cancellation time, group size price reduciton, age price reduction)
+private person/business details
+
+
+HOTEL:
+type
+name
+address
+rating
+amenities
+amenities 2
+languages
+rooms (type, count, beds, guest count, optional size, smoking, amenities, name, pricing (default, group/age price reduction))
+payment
+business details
+
+
+-------------
+
+AFTER:
+delete register messages 1,2
+check every validation case
+spelling
+file structure

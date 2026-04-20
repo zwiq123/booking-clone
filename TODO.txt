@@ -1,14 +1,52 @@
+-----MODELS-----
+
 pricing model
 bookings model
-
 category model + seed
 subcategory model + seed
 
+-----ADDRESS----
+
+latitude/longitude calculation
+prisma.$queryRaw``;
+ST_DWithin(
+    ST_MakePoint(longitude, latitude))::geography,
+    ...,
+    radius in meters
+)
+ST_Distance_Sphere(
+    point(longitude, latitude),
+    point(...)
+) AS Distance
+
+-----MISCELLANEOUS-----
+
+booking scraping
 all seeds
 
+host dashboard:
+- properties
+- reservations
+- reviews
+
+-----MECHANICS-----
+
 change password
-sorting properties ["near", "random", "best", ...] ??
-payment
+
+sortType=[near, rating, reviews, price], 
+sort=[desc, asc]
+rating=
+minRating=
+minPrice=
+maxPrice=
+maxDistance=
+...
+
+payment (card numbers)
+
+bookings
+
+-----ENDPOINTS-----
 
 GET /properties
 GET /properties/:id
@@ -30,14 +68,7 @@ GET /properties/:id/reviews
 
 ...
 
-booking scraping
-
-host dashboard:
-- properties
-- reservations
-- reviews
-
--------------
+-----SCENARIOS-----
 
 HOUSE:
 whole/single room
@@ -72,7 +103,7 @@ business details
 
 -------------
 
-AFTER:
+-----AFTER-----
 delete register messages 1,2
 check every validation case
 spelling

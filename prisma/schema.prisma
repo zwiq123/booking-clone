@@ -47,23 +47,30 @@ model VerificationToken {
 // -----PROPERTIES-----
 
 model Property {
-  id              Int  @id @default(autoincrement())
-  name            String
-  description     String
-  address         Address?
+  id                      Int  @id @default(autoincrement())
+  name                    String
+  address                 Address?
+  rating                  Int?
   
-  ownerId         Int
-  owner           User  @relation(fields: [ownerId], references: [id])
+  ownerId                 Int
+  owner                   User  @relation(fields: [ownerId], references: [id])
   
-  statusId        Int
-  status          PropertyStatus  @relation(fields: [statusId], references: [id])
+  statusId                Int
+  status                  PropertyStatus  @relation(fields: [statusId], references: [id])
   
-  propertyTypeId  Int
-  type            PropertyType  @relation(fields: [propertyTypeId], references: [id])
+  propertyTypeId          Int
+  type                    PropertyType  @relation(fields: [propertyTypeId], references: [id])
   
-  images          Image[]
-  reviews         Review[]
-  rooms           Room[]
+  propertyDescription     String
+  ownerDescription        String
+  surroundingsDescription String
+
+  amenities               Amenity[]
+
+  spokenLanguages         Language[]
+  images                  Image[]
+  reviews                 Review[]
+  rooms                   Room[]
 }
 
 model PropertyType {
@@ -82,29 +89,62 @@ model PropertyStatus {
 // -----ROOMS-----
 
 model Room {
-  id          Int @id @default(autoincrement())
-  propertyId  Int
-  property    Property  @relation(fields: [propertyId], references: [id])
-  capacity    Int
-  // pricing
+  id              Int @id @default(autoincrement())
+  name            String
+  propertyId      Int
+  property        Property  @relation(fields: [propertyId], references: [id])
+  capacity        Int @default(1)
+  area            Int?
+  smokingAllowed  Boolean @default(false)
+  bathroomPrivate Boolean @default(true)
+  beds            Bed[]
+  amenities       Amenity[]
+  pricing         Pricing?
+}
+
+model Bed {
+  id      Int @id @default(autoincrement())
+  typeId  Int
+  type    BedType @relation(fields: [typeId], references: [id])
+  count   Int
+  roomId  Int
+  room    Room  @relation(fields: [roomId], references: [id])
+}
+
+model BedType {
+  id    Int @id @default(autoincrement())
+  name  String  @unique
+  size  String
+  beds  Bed[]
 }
 
 // -----AMENITIES-----
 
+// many-to-many
 model Amenity {
+  id              Int @id @default(autoincrement())
+  name            String  @unique
+  amenityTypeId   Int
+  amenityType     AmenityType @relation(fields: [amenityTypeId], references: [id])
+  propertyId      Int
+  property        Property  @relation(fields: [propertyId], references: [id])
+  roomId          Int
+  room            Room  @relation(fields: [roomId], references: [id])
+}
+
+model AmenityType {
   id          Int @id @default(autoincrement())
   name        String  @unique
   categoryId  Int
   category    AmenityCategory @relation(fields: [categoryId], references: [id])
+  amenities   Amenity[]
 }
 
 model AmenityCategory {
-  id        Int @id @default(autoincrement())
-  name      String  @unique
-  amenities Amenity[]
+  id            Int @id @default(autoincrement())
+  name          String  @unique
+  amenityTypes  AmenityType[]
 }
-
-// many-to-many amenities to properties / amenities to rooms
 
 // -----REVIEWS-----
 
@@ -139,4 +179,27 @@ model Image {
   isMain      Boolean @default(false)
   propertyId  Int
   property    Property  @relation(fields: [propertyId], references: [id])
+}
+
+// many-to-many
+model Language {
+  id              Int @id @default(autoincrement())
+  languageTypeId  Int
+  languageType    LanguageType  @relation(fields: [languageTypeId], references: [id])
+  propertyId      Int
+  property        Property  @relation(fields: [propertyId], references: [id])
+}
+
+model LanguageType {
+  id          Int @id @default(autoincrement())
+  name        String  @unique
+  lanugages   Language[]
+}
+
+model Pricing {
+  id      Int @id @default(autoincrement())
+  price   Int
+  roomId  Int   @unique
+  Room    Room  @relation(fields: [roomId], references: [id])
+  // groups/age prices
 }

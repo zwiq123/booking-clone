@@ -106,7 +106,7 @@ model Bed {
   id      Int @id @default(autoincrement())
   typeId  Int
   type    BedType @relation(fields: [typeId], references: [id])
-  count   Int
+  count   Int @default(1)
   roomId  Int
   room    Room  @relation(fields: [roomId], references: [id])
 }
@@ -198,7 +198,7 @@ model LanguageType {
 
 model Pricing {
   id      Int @id @default(autoincrement())
-  price   Int
+  price   Float
   roomId  Int   @unique
   Room    Room  @relation(fields: [roomId], references: [id])
   // groups/age prices

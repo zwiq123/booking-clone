@@ -18,6 +18,15 @@ async function main() {
         skipDuplicates: true
     })
 
+    await prisma.propertyStatus.createMany({
+        data: [
+            {id: 1, name: "published"},
+            {id: 2, name: "in progress"},
+            {id: 3, name: "hidden"}
+        ],
+        skipDuplicates: true
+    })
+
     await prisma.propertyType.createMany({
         data: [
             {id: 1, name: "hotel"},
@@ -36,7 +45,8 @@ async function main() {
             {id: 14, name: "ryokan"},
             {id: 15, name: "domek letniskowy"},
             {id: 16, name: "dom"}
-        ]
+        ],
+        skipDuplicates: true
     })
 
     await prisma.amenityCategory.createMany({
@@ -46,7 +56,8 @@ async function main() {
             {id: 3, name: "Ogólne udogodnienia"},
             {id: 4, name: "Wyposażenie pokoju"},
             {id: 5, name: "Całoobiektowe udogodnienia"}
-        ]
+        ],
+        skipDuplicates: true
     })
 
     await prisma.amenityType.createMany({
@@ -102,7 +113,8 @@ async function main() {
             {id: 49, categoryId: 5, name: "Stacja ładowania pojazdów elektrycznych"},
             {id: 50, categoryId: 5, name: "Basen"},
             {id: 51, categoryId: 5, name: "Plaża"}
-        ]
+        ],
+        skipDuplicates: true
     })
 
     await prisma.languageType.createMany({
@@ -110,7 +122,8 @@ async function main() {
             {id: 1, name: "english"},
             {id: 2, name: "polski"},
             {id: 3, name: "deutsch"}
-        ]
+        ],
+        skipDuplicates: true
     })
 
     await prisma.bedType.createMany({
@@ -122,7 +135,8 @@ async function main() {
             {id: 5, name: "łóżko piętrowe", size: "Różne wymiary"},
             {id: 6, name: "rozkładana sofa", size: "Różne wymiary"},
             {id: 7, name: "materac futon", size: "Różne wymiary"}
-        ]
+        ],
+        skipDuplicates: true
     })
 }
 

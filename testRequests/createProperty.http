@@ -1,0 +1,54 @@
+POST http://localhost:3000/properties HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc2MTQ5MTgyLCJleHAiOjE3NzYyMzU1ODJ9.2bF8hDWRz0d4c_424hYvPpUaatFuimWUqYT2_xWaqiQ
+Content-Type: application/application/json
+
+{
+    "name": "propertyName",
+    "address": {
+        "latitude": 50.50,
+        "longitude": -20.20,
+        "country": "Poland",
+        "state": "malopolskie",
+        "city": "Kraków",
+        "postalCode": "123-12",
+        "street": "Adolfa Nowaczynskiego 2"
+    },
+    "rating": 5,
+    "type": 1,
+    "propertyDescription": "Hotel elo",
+    "ownerDescription": "Właściciel sigma",
+    "surroundingsDescription": "Okolica spoko",
+    "amenities": [
+        51, 49, 32, 35
+    ],
+    "spokenLanguages": [
+        1, 2
+    ],
+    "images": [
+        {"isMain": true, "path": ""},
+        {"path": ""},
+        {"path": ""},
+        {"path": ""},
+        {"path": ""}
+    ],
+    "rooms": [
+        {
+            "name": "pokój elo",
+            "capacity": 3,
+            "area": 140,
+            "smokingAllowed": true,
+            "bathroomPrivate": false,
+            "beds": [
+                {"type": 1, "count": 2},
+                {"type": 2}
+            ],
+            "amenities": [
+                1, 12, 24, 36
+            ],
+            "pricing": {
+                "price": 100.99
+            },
+            "count": 5
+        },
+    ]
+}

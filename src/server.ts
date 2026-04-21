@@ -218,6 +218,58 @@ app.get("/properties", async (req, res) => {
     res.send("yo");
 })
 
+app.post("/properties", authenticate, authorize(["host"]), async (req, res) => {
+    const userID: number = req.user?.id;
+    const propertyName: string = req.body.name;
+    const address = req.body.address;
+    const rating = req.body.rating ?? null
+    const propertyTypeId = req.body.type;
+    const propertyDescription = req.body.propertyDescription;
+    const ownerDescription = req.body.ownerDescription ?? "";
+    const surroundingsDescription = req.body.surroundingsDescription ?? "";
+    const amenities = req.body.amenities;
+    const spokenLanguages = req.body.spokenLanguages;
+    const images = req.body.images; // to change
+    const rooms = req.body.rooms;
+
+    const property = await prisma.property.create({
+        data: {
+            name: propertyName,
+            rating,
+            propertyTypeId,
+            propertyDescription,
+            ownerDescription,
+            surroundingsDescription,
+            statusId: 1,
+            ownerId: userID
+        }
+    });
+
+    await prisma.address.create({
+        data: {
+            latitude: address.latitude,
+            longitude: address.longitude,
+            country: address.country,
+            state: address.state,
+            city: address.city,
+            postalCode: address.postalCode,
+            street: address.street,
+            propertyId: property.id
+        }
+    })
+
+    const amenityData = [];
+    for (const amenityID of amenities) {
+        console.log()
+    }
+
+    // await prisma.amenity.createMany({
+    //     data: [
+    //         {amenityTypeId: }
+    //     ]
+    // })
+})
+
 app.get("/properties/:id", async (req, res) => {
     let propertyID;
     try {

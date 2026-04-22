@@ -12,7 +12,7 @@ async function main() {
     await prisma.role.createMany({
         data: [
             {id: 1, name: "user"},
-            {id: 2, name: "partner"},
+            {id: 2, name: "host"},
             {id: 3, name: "admin"}
         ],
         skipDuplicates: true
@@ -49,18 +49,17 @@ async function main() {
         skipDuplicates: true
     })
 
-    await prisma.amenityCategory.createMany({
+    await prisma.roomAmenityCategory.createMany({
         data: [
             {id: 1, name: "Jedzenie i napoje"},
             {id: 2, name: "Część zewnętrzna i widoki"},
             {id: 3, name: "Ogólne udogodnienia"},
-            {id: 4, name: "Wyposażenie pokoju"},
-            {id: 5, name: "Całoobiektowe udogodnienia"}
+            {id: 4, name: "Wyposażenie pokoju"}
         ],
         skipDuplicates: true
     })
 
-    await prisma.amenityType.createMany({
+    await prisma.roomAmenityType.createMany({
         data: [
             {id: 1, categoryId: 1, name: "Czajnik elektryczny"},
             {id: 2, categoryId: 1, name: "Zestaw do parzenia kawy i herbaty"},
@@ -93,26 +92,32 @@ async function main() {
             {id: 29, categoryId: 4, name: "Kapcie"},
             {id: 30, categoryId: 4, name: "Szlafrok"},
             {id: 31, categoryId: 4, name: "Wanna z hydromasażem"},
-            {id: 32, categoryId: 5, name: "Restauracja"},
-            {id: 33, categoryId: 5, name: "Bar"},
-            {id: 34, categoryId: 5, name: "Całodobowa recepcja"},
-            {id: 35, categoryId: 5, name: "Obsługa pokoju"},
-            {id: 36, categoryId: 5, name: "Sauna"},
-            {id: 37, categoryId: 5, name: "Centrum fitness"},
-            {id: 38, categoryId: 5, name: "Ogród"},
-            {id: 39, categoryId: 5, name: "Taras"},
-            {id: 40, categoryId: 5, name: "Pokoje dla niepalących"},
-            {id: 41, categoryId: 5, name: "Transfer lotniskowy"},
-            {id: 42, categoryId: 5, name: "Narciarstwo"},
-            {id: 43, categoryId: 5, name: "Pokoje rodzinne"},
-            {id: 44, categoryId: 5, name: "Spa i centrum odnowy biologicznej"},
-            {id: 45, categoryId: 5, name: "Wanna z hydromasażem / jacuzzi"},
-            {id: 46, categoryId: 5, name: "Bezpłatne Wi-Fi"},
-            {id: 47, categoryId: 5, name: "Klimatyzacja"},
-            {id: 48, categoryId: 5, name: "Park wodny"},
-            {id: 49, categoryId: 5, name: "Stacja ładowania pojazdów elektrycznych"},
-            {id: 50, categoryId: 5, name: "Basen"},
-            {id: 51, categoryId: 5, name: "Plaża"}
+        ],
+        skipDuplicates: true
+    })
+
+    await prisma.propertyAmenityType.createMany({
+        data: [
+            {id: 32, name: "Restauracja"},
+            {id: 33, name: "Bar"},
+            {id: 34, name: "Całodobowa recepcja"},
+            {id: 35, name: "Obsługa pokoju"},
+            {id: 36, name: "Sauna"},
+            {id: 37, name: "Centrum fitness"},
+            {id: 38, name: "Ogród"},
+            {id: 39, name: "Taras"},
+            {id: 40, name: "Pokoje dla niepalących"},
+            {id: 41, name: "Transfer lotniskowy"},
+            {id: 42, name: "Narciarstwo"},
+            {id: 43, name: "Pokoje rodzinne"},
+            {id: 44, name: "Spa i centrum odnowy biologicznej"},
+            {id: 45, name: "Wanna z hydromasażem / jacuzzi"},
+            {id: 46, name: "Bezpłatne Wi-Fi"},
+            {id: 47, name: "Klimatyzacja"},
+            {id: 48, name: "Park wodny"},
+            {id: 49, name: "Stacja ładowania pojazdów elektrycznych"},
+            {id: 50, name: "Basen"},
+            {id: 51, name: "Plaża"}
         ],
         skipDuplicates: true
     })

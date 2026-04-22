@@ -31,7 +31,7 @@ const transporter = nodemailer.createTransport({
 const generateToken = (user: {id: number; role: string}) => {
     return jwt.sign(
         {
-            userID: user.id,
+            id: user.id,
             role: user.role
         },
         process.env.JWT_SECRET!,
@@ -45,7 +45,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded as any;
+        req.user = decoded as {id: number, role: string};
         next();
     } catch (err) {
         return res.status(401).json({message: "Invalid authentication token"});
@@ -55,7 +55,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
 const authorize = (roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
         if (!req.user || !roles.includes(req.user.role)) {
-            res.status(403).json({message: "Worng user role"});
+            res.status(403).json({message: "Wrong user role"});
         }
         next();
     }
@@ -184,6 +184,7 @@ app.get("/verify/registration", async (req, res) => {
         return res.status(400).json({message: "Expired verification token"});
     }
 
+    // all at once
     await prisma.$transaction([
         prisma.user.update({
             where: {id: verificationData.userId},
@@ -219,6 +220,10 @@ app.get("/properties", async (req, res) => {
 })
 
 app.post("/properties", authenticate, authorize(["host"]), async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({message: "Invalid user"});
+    }
+
     const userID: number = req.user?.id;
     const propertyName: string = req.body.name;
     const address = req.body.address;
@@ -241,33 +246,111 @@ app.post("/properties", authenticate, authorize(["host"]), async (req, res) => {
             ownerDescription,
             surroundingsDescription,
             statusId: 1,
-            ownerId: userID
+            ownerId: userID,
+            address: {
+                create: {
+                    latitude: address.latitude,
+                    longitude: address.longitude,
+                    country: address.country,
+                    state: address.state,
+                    city: address.city,
+                    postalCode: address.postalCode,
+                    street: address.street
+                }
+            },
+            amenities: {
+                create: amenities.map(amenityID => ({amenityTypeId: amenityID}))
+            },
+            spokenLanguages: {
+                create: spokenLanguages.map(languageID => ({languageTypeId: languageID}))
+            },
+            images: {
+                create: images.map(img => ({isMain: img.isMain ?? false, path: img.path}))
+            }
         }
     });
 
-    await prisma.address.create({
-        data: {
-            latitude: address.latitude,
-            longitude: address.longitude,
-            country: address.country,
-            state: address.state,
-            city: address.city,
-            postalCode: address.postalCode,
-            street: address.street,
-            propertyId: property.id
-        }
-    })
 
-    const amenityData = [];
-    for (const amenityID of amenities) {
-        console.log()
+    // const amenityData = [];
+    // for (const amenityID of amenities) {
+    //     amenityData.push({amenityTypeId: amenityID, propertyId: property.id});
+    // }
+
+    // await prisma.propertyAmenity.createMany({
+    //     data: amenityData
+    // });
+
+    // const languageData = [];
+    // for (const languageID of spokenLanguages) {
+    //     languageData.push({languageTypeId: languageID, propertyId: property.id});
+    // }
+
+    // await prisma.language.createMany({
+    //     data: languageData
+    // })
+
+    // const imageData = [];
+    // for (const image of images) {
+    //     imageData.push({isMain: image.isMain ?? false, path: image.path, propertyId: property.id});
+    // }
+
+    // await prisma.image.createMany({
+    //     data: imageData
+    // })
+
+    for (const room of rooms) {
+        const count = room.count ?? 1;
+        const validAmenities = room.amenities.filter((id: number) => id >= 1 && id <= 31);
+
+        for (let i = 0 ; i < count ; i++) {
+            await prisma.room.create({
+                data: {
+                    name: room.name,
+                    propertyId: property.id,
+                    capacity: room.capacity,
+                    area: room.area,
+                    smokingAllowed: room.smokingAllowed,
+                    bathroomPrivate: room.bathroomPrivate,
+                    beds: {
+                        create: room.beds.map(bed => ({typeId: bed.type, count: bed.count ?? 1}))
+                    },
+                    amenities: {
+                        create: validAmenities.map(amenityId => ({amenityTypeId: amenityId}))
+                    },
+                    pricing: room.pricing ? {
+                        create: {price: room.pricing.price}
+                    } : undefined
+                }
+            })
+        }
     }
 
-    // await prisma.amenity.createMany({
-    //     data: [
-    //         {amenityTypeId: }
-    //     ]
+    res.json({message: "Property added successfully"});
+
+    // const roomData = [];
+    // const roomAmenityData = [];
+    // for (const room of rooms) {
+    //     const count = room.count ?? 1;
+    //     const singleRoomData = {
+    //         name: room.name,
+    //         propertyId: property.id,
+    //         capacity: room.capacity,
+    //         area: room.area ?? null,
+    //         smokingAllowed: room.smokingAllowed === null ? false : room.smokingAllowed,
+    //         bathroomPrivate: room.bathroomPrivate === null ? true : room.bathroomPrivate,
+    //     }
+    //     for (let i = 0 ; i < count ; i ++) {
+    //         roomData.push(singleRoomData);
+    //         if (!room.amenities) continue;
+    //         for (const amenity of room.amenities) {
+    //         }
+    //     }
+    // }
+
+    // await prisma.room.createMany({
+    //     data: roomData
     // })
+
 })
 
 app.get("/properties/:id", async (req, res) => {

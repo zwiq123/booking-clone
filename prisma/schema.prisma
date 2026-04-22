@@ -65,7 +65,7 @@ model Property {
   ownerDescription        String
   surroundingsDescription String
 
-  amenities               Amenity[]
+  amenities               PropertyAmenity[]
 
   spokenLanguages         Language[]
   images                  Image[]
@@ -98,7 +98,7 @@ model Room {
   smokingAllowed  Boolean @default(false)
   bathroomPrivate Boolean @default(true)
   beds            Bed[]
-  amenities       Amenity[]
+  amenities       RoomAmenity[]
   pricing         Pricing?
 }
 
@@ -121,29 +121,40 @@ model BedType {
 // -----AMENITIES-----
 
 // many-to-many
-model Amenity {
+model RoomAmenity {
   id              Int @id @default(autoincrement())
-  name            String  @unique
   amenityTypeId   Int
-  amenityType     AmenityType @relation(fields: [amenityTypeId], references: [id])
-  propertyId      Int
-  property        Property  @relation(fields: [propertyId], references: [id])
+  amenityType     RoomAmenityType @relation(fields: [amenityTypeId], references: [id])
   roomId          Int
   room            Room  @relation(fields: [roomId], references: [id])
 }
 
-model AmenityType {
+model PropertyAmenity {
+  id              Int @id @default(autoincrement())
+  amenityTypeId   Int
+  amenityType     PropertyAmenityType @relation(fields: [amenityTypeId], references: [id])
+  propertyId      Int
+  property        Property  @relation(fields: [propertyId], references: [id])
+}
+
+model RoomAmenityType {
   id          Int @id @default(autoincrement())
   name        String  @unique
   categoryId  Int
-  category    AmenityCategory @relation(fields: [categoryId], references: [id])
-  amenities   Amenity[]
+  category    RoomAmenityCategory @relation(fields: [categoryId], references: [id])
+  amenities   RoomAmenity[] 
 }
 
-model AmenityCategory {
+model PropertyAmenityType {
+  id          Int @id @default(autoincrement())
+  name        String  @unique
+  amenities   PropertyAmenity[] 
+}
+
+model RoomAmenityCategory {
   id            Int @id @default(autoincrement())
   name          String  @unique
-  amenityTypes  AmenityType[]
+  amenityTypes  RoomAmenityType[]
 }
 
 // -----REVIEWS-----

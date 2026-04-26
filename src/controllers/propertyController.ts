@@ -161,7 +161,7 @@ export const getProperty = async (req: Request, res: Response) => {
         return res.status(400).json({message: "Incorrect property ID format"});
     }
     
-        const property = await prisma.property.findUnique({
+    const property = await prisma.property.findUnique({
         where: {id: propertyID},
         include: {
             status: true,
@@ -395,4 +395,9 @@ export const getPropertyReviews = async (req: Request, res: Response) => {
     }
 
     res.json(property.reviews);
+}
+
+export const getPropertyTypes = async (req: Request, res: Response) => {
+    const types = await prisma.propertyType.findMany();
+    res.json(types);
 }

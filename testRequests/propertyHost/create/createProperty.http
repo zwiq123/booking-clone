@@ -1,6 +1,6 @@
-POST http://localhost:3000/properties HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc2MTQ5MTgyLCJleHAiOjE3NzYyMzU1ODJ9.2bF8hDWRz0d4c_424hYvPpUaatFuimWUqYT2_xWaqiQ
-Content-Type: application/application/json
+POST http://localhost:3000/api/properties HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzcxNTc5ODMsImV4cCI6MTc3NzI0NDM4M30.3smMligNEUikxS7u0Cyp9XZ28xtdc7C-nVX2Fdv4Dec
+Content-Type: application/json
 
 {
     "name": "propertyName",
@@ -18,18 +18,11 @@ Content-Type: application/application/json
     "propertyDescription": "Hotel elo",
     "ownerDescription": "Właściciel sigma",
     "surroundingsDescription": "Okolica spoko",
-    "amenities": [
-        51, 49, 32, 35
-    ],
-    "spokenLanguages": [
-        1, 2
-    ],
+    "amenities": [51, 49, 32, 35],
+    "spokenLanguages": [1, 2],
     "images": [
-        {"isMain": true, "path": ""},
-        {"path": ""},
-        {"path": ""},
-        {"path": ""},
-        {"path": ""}
+        {"isMain": true, "path": "/uploads/images-1777162646767-2125676.jpg"},
+        {"path": "/uploads/images-1777162646767-2125676.jpg"}
     ],
     "rooms": [
         {
@@ -42,13 +35,11 @@ Content-Type: application/application/json
                 {"type": 1, "count": 2},
                 {"type": 2}
             ],
-            "amenities": [
-                1, 12, 24, 36
-            ],
+            "amenities": [1, 12, 24, 36],
             "pricing": {
                 "price": 100.99
             },
             "count": 5
-        },
+        }
     ]
 }

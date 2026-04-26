@@ -108,3 +108,21 @@ delete register messages 1,2
 check every validation case
 spelling
 file structure
+try catch
+
+
+-----PLAN-----
+images upload [x]
+everything about properties host-side (get, delete, update (rooms, amenities, info))
+properties user-side (get, filter, sort)
+
+pricing
+
+bookings (model, creation, saving the spot (when user start booking))
+payment (card info, etc)
+displaying bookings (user, host)
+bookings management
+
+reviews creation (check if user had a booking, limit to one)
+get reviews, edit, delete, calculate rating when displaying properties
+

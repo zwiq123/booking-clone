@@ -5,6 +5,7 @@ import { validate } from "../middleware/typeValidation";
 import { PropertyCreateSchema, PropertyIdSchema, PropertyUpdateAddressSchema, PropertyUpdateAmenitiesSchema, PropertyUpdateDetailsSchema, PropertyUpdateStatusSchema } from "../schemas/property.schema";
 import { createRooms } from "../controllers/roomController";
 import { RoomCreateSchema } from "../schemas/room.schema";
+import { getPropertyImages } from "../controllers/imageController";
 
 const router = Router();
 
@@ -13,6 +14,7 @@ router.get("/host", getPropertiesHost);
 router.get("/single/:id", validate(PropertyIdSchema), getProperty);
 router.get("/single/:id/host", authenticate, authorize(["host"]), validate(PropertyIdSchema), getPropertyHost);
 
+router.get("/single/:id/images", validate(PropertyIdSchema), getPropertyImages);
 router.get("/single/:id/rooms", validate(PropertyIdSchema), getPropertyRooms);
 router.get("/single/:id/reviews", validate(PropertyIdSchema), getPropertyReviews);
 

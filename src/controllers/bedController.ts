@@ -32,3 +32,46 @@ export const createBed = async (req: Request, res: Response) => {
 
     res.json({message: "Successfully created bed(s)"});
 }
+
+export const deleteBed = async (req: Request, res: Response) => {
+    const bedId = parseInt(req.params.id);
+
+    const bed = await prisma.bed.findUnique({where: {id: bedId}, include: {room: {include: {property: true}}}});
+
+    if (!bed || bed.room.property.ownerId != req.user.id) {
+        return res.status(404).json({message: `Bed with id ${bedId} not found or not yours`});
+    }
+
+    // email booked / disable if booked
+
+    await prisma.bed.delete({where: {id: bedId}});
+    res.json({message: `Successfully deleted bed with id ${bedId}`});
+}
+
+export const updateBed = async (req: Request, res: Response) => {
+    const bedId = parseInt(req.params.id);
+
+    const bed = await prisma.bed.findUnique({where: {id: bedId}, include: {room: {include: {property: true}}}});
+
+    if (!bed || bed.room.property.ownerId != req.user.id) {
+        return res.status(404).json({message: `Bed with id ${bedId} not found or not yours`});
+    }
+
+    const bedTypeId = req.body.type;
+    const count = req.body.type;
+
+    const bedType = await prisma.bedType.findUnique({where: {id: bedTypeId}});
+    if (!bedType) { 
+        return res.status(404).json({message: `Bed type with id ${bedId} not found`});
+    }
+
+    await prisma.bed.update({
+        where: {id: bedId},
+        data: {
+            ...(count && {count}),
+            ...(bedTypeId && {typeId: bedTypeId})
+        }
+    })
+
+    res.json({message: `Successfully updated bed with id ${bedId}`});
+}

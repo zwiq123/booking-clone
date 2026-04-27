@@ -51,6 +51,7 @@ model Property {
   name                    String
   address                 Address?
   rating                  Int?
+  avgReviews              Float?
   
   ownerId                 Int
   owner                   User  @relation(fields: [ownerId], references: [id], onDelete: Cascade)

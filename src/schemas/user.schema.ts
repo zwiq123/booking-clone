@@ -18,3 +18,9 @@ export const UserLoginSchema = z.object({
         role: z.string().optional()
     })
 })
+
+export const UserIdSchema = z.object({
+    params: z.object({
+        id: z.coerce.number()
+    })
+})

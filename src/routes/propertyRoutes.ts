@@ -2,15 +2,15 @@ import { Router } from "express";
 import { changePropertyStatus, createProperty, deleteProperty, getPropertiesHost, getPropertiesUser, getProperty, getPropertyHost, getPropertyReviews, getPropertyRooms, getPropertyTypes, updatePropertyAddress, updatePropertyAmenities, updatePropertyDetails } from "../controllers/propertyController";
 import { authenticate, authorize } from "../middleware/auth";
 import { validate } from "../middleware/typeValidation";
-import { PropertyCreateSchema, PropertyIdSchema, PropertyUpdateAddressSchema, PropertyUpdateAmenitiesSchema, PropertyUpdateDetailsSchema, PropertyUpdateStatusSchema } from "../schemas/property.schema";
+import { PropertyCreateSchema, PropertyGetUserSchema, PropertyIdSchema, PropertyUpdateAddressSchema, PropertyUpdateAmenitiesSchema, PropertyUpdateDetailsSchema, PropertyUpdateStatusSchema } from "../schemas/property.schema";
 import { createRooms } from "../controllers/roomController";
 import { RoomCreateSchema } from "../schemas/room.schema";
 import { getPropertyImages } from "../controllers/imageController";
 
 const router = Router();
 
-router.get("/", getPropertiesUser);
-router.get("/host", getPropertiesHost);
+router.get("/", validate(PropertyGetUserSchema), getPropertiesUser);
+router.get("/host", authenticate, authorize(["host"]), getPropertiesHost);
 router.get("/single/:id", validate(PropertyIdSchema), getProperty);
 router.get("/single/:id/host", authenticate, authorize(["host"]), validate(PropertyIdSchema), getPropertyHost);
 

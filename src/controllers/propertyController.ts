@@ -1,26 +1,105 @@
 import { Request, Response } from "express";
 import { prisma } from "./../services/prismaInit";
+import { Prisma } from "@prisma/client";
+import { calculateRoughRadius } from "../services/distance";
 
 export const getPropertiesUser = async (req: Request, res: Response) => {
-    const limit = req.query.limit;
-    const sort = req.query.sort;
-    const distance = req.query.distance;
-    // parameters
+    const {
+        minPrice,
+        maxPrice,
+        ratings,
+        minReviewRating,
+        minCapacity,
+        typeIds,
+        pAmenityIds,
+        rAmenityIds,
+        languageIds,
+        latitude,
+        longitude,
+        radius,
+        limit,
+        sort,
+        order,
+        page
+    } = res.locals.query;
 
-    const properties = await prisma.property.findMany();
-    console.log(properties);
-    res.send("yo");
+    const where: Prisma.PropertyWhereInput = {}
+
+    if (latitude && longitude && radius) {
+        where.address = calculateRoughRadius(latitude, longitude, radius);
+    }
+
+    if (minReviewRating) {
+        where.avgReviews = {gte: minReviewRating}
+    }
+
+    if (pAmenityIds && pAmenityIds.length > 0){
+        where.amenities = {some: {amenityTypeId: {in: pAmenityIds}}}
+    }
+
+    if (languageIds) {
+        where.spokenLanguages = {some: {languageTypeId: {in: languageIds}}}
+    }
+
+    if (typeIds) {
+        where.propertyTypeId = {in: typeIds}
+    }
+
+    if (ratings) {
+        where.rating = {in: ratings}
+    }
+
+    if (minCapacity || minPrice || maxPrice || (rAmenityIds && rAmenityIds.length > 0)) {
+        where.rooms = {
+            some: {
+                ...(minCapacity && {capacity: {gte: minCapacity}}),
+                ...(rAmenityIds && rAmenityIds.length > 0 && {
+                    amenities: {
+                        some: {amenityTypeId: {in: rAmenityIds}}
+                    }
+                }),
+                pricing: {
+                    price: {
+                        ...(minPrice && {gte: minPrice}),
+                        ...(maxPrice && {lte: maxPrice})
+                    }
+                }
+            }
+
+        }
+    }
+
+    where.statusId = 1;
+
+    const properties = await prisma.property.findMany({
+        where, 
+        take: limit,
+        skip: (page - 1) * limit,
+        orderBy: {
+            [sort || "id"]: order || "desc"
+        },
+        include: {
+            address: true,
+            rooms: {include: {pricing: true}},
+            amenities: true,
+            images: true
+        }
+    });
+    
+    res.json(properties);
 }
 
 export const getPropertiesHost = async (req: Request, res: Response) => {
-    const limit = req.query.limit;
-    const sort = req.query.sort;
-    const distance = req.query.distance;
-    // parameters
-
-    const properties = await prisma.property.findMany();
-    console.log(properties);
-    res.send("yo");
+    const properties = await prisma.property.findMany({
+        where: {ownerId: req.user.id},
+        include: {
+            amenities: true,
+            rooms: true,
+            address: true,
+            images: true
+        }
+    });
+    res.send(properties);
 }
 
 export const createProperty = async (req: Request, res: Response) => {

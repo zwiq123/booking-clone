@@ -1,6 +1,56 @@
 import {z} from "zod";
 import { AnyZodObject } from "zod/v3";
 
+export const PropertyGetUserSchema = z.object({
+    query: z.object({
+        minPrice: z.coerce.number().optional(),
+        maxPrice: z.coerce.number().optional(),
+
+        minReviewRating: z.coerce.number().optional(),
+        minCapacity: z.coerce.number().int().optional(),
+
+        ratings: z.preprocess((val) => {
+            if (Array.isArray(val)) return val;
+            if (val === undefined || val === "") return [];
+            if (typeof val === "string") return val.split(",");
+            return [];
+        }, z.array(z.coerce.number().int().min(1).max(5))).optional(),
+        typeIds: z.preprocess((val) => {
+            if (Array.isArray(val)) return val;
+            if (val === undefined || val === "") return [];
+            if (typeof val === "string") return val.split(",");
+            return [];
+        }, z.array(z.coerce.number().int().min(1).max(16))).optional(),
+        pAmenityIds: z.preprocess((val) => {
+            if (Array.isArray(val)) return val;
+            if (val === undefined || val === "") return [];
+            if (typeof val === "string") return val.split(",");
+            return [];
+        }, z.array(z.coerce.number().int().min(1).max(20))).optional(),
+        rAmenityIds: z.preprocess((val) => {
+            if (Array.isArray(val)) return val;
+            if (val === undefined || val === "") return [];
+            if (typeof val === "string") return val.split(",");
+            return [];
+        }, z.array(z.coerce.number().int().min(1).max(31))).optional(),
+        languageIds: z.preprocess((val) => {
+            if (Array.isArray(val)) return val;
+            if (val === undefined || val === "") return [];
+            if (typeof val === "string") return val.split(",");
+            return [];
+        }, z.array(z.coerce.number().int().min(1).max(3))).optional(),
+        
+        latitude: z.coerce.number().min(-90).max(90).optional(),
+        longitude: z.coerce.number().min(-180).max(180).optional(),
+        radius: z.coerce.number().positive().optional(),
+
+        limit: z.coerce.number().int().min(1).max(150).default(40),
+        sort: z.enum(["price", "id", "rating", "createdAt", "reviews"]).default("id"),
+        order: z.enum(["asc", "desc"]).default("desc"),
+        page: z.coerce.number().int().catch(1)
+    })
+})
+
 export const PropertyUpdateAmenitiesSchema = z.object({
     body: z.object({
         amenities: z.array(z.number())
@@ -37,8 +87,8 @@ export const PropertyUpdateAddressSchema = z.object({
         id: z.coerce.number()
     }),
     body: z.object({
-        latitude: z.coerce.number(),
-        longitude: z.coerce.number(),
+        latitude: z.coerce.number().min(-90).max(90).optional(),
+        longitude: z.coerce.number().min(-180).max(180).optional(),
         country: z.string().optional(),
         state: z.string().optional(),
         city: z.string().optional(),
@@ -60,8 +110,8 @@ export const PropertyCreateSchema = z.object({
     body: z.object({
         name: z.string(),
         address: z.object({
-            latitude: z.coerce.number(),
-            longitude: z.coerce.number(),
+            latitude: z.coerce.number().min(-90).max(90),
+            longitude: z.coerce.number().min(-180).max(180),
             country: z.string().optional(),
             state: z.string().optional(),
             city: z.string().optional(),

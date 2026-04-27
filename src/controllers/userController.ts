@@ -134,3 +134,27 @@ export const verifyRegistration = async (req: Request, res: Response) => {
     // redirect ?
     res.json({message: "Account verified. You can now log in."});
 }
+
+export const getUserProfile = async (req: Request, res: Response) => {
+    const userId = parseInt(req.params.id);
+
+    const user = await prisma.user.findUnique({
+        where: {id: userId},
+        select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+            role: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    })
+
+    if (!user) {
+        return res.status(404).json({message: `User with id ${userId} not found`});
+    }
+
+    res.json(user);
+}

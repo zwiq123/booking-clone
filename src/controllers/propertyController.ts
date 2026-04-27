@@ -180,7 +180,14 @@ export const getProperty = async (req: Request, res: Response) => {
             statusId: false,
             address: {
                 select: {
-                    propertyId: false
+                    id: true,
+                    latitude: true,
+                    longitude: true,
+                    country: true,
+                    state: true,
+                    city: true,
+                    postalCode: true,
+                    street: true,
                 }
             },
             spokenLanguages: {

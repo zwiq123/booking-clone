@@ -1,26 +1,30 @@
 import { Router } from "express";
 import { changePropertyStatus, createProperty, deleteProperty, getPropertiesHost, getPropertiesUser, getProperty, getPropertyHost, getPropertyReviews, getPropertyRooms, getPropertyTypes, updatePropertyAddress, updatePropertyAmenities, updatePropertyDetails } from "../controllers/propertyController";
 import { authenticate, authorize } from "../middleware/auth";
-import { validate, validateFloatBodyFields, validateIntBodyFields, validateIntParams } from "../middleware/typeValidation";
-import { updatePropertyAmenitiesSchema } from "../schemas/property.schema";
+import { validate } from "../middleware/typeValidation";
+import { PropertyCreateSchema, PropertyIdSchema, PropertyUpdateAddressSchema, PropertyUpdateAmenitiesSchema, PropertyUpdateDetailsSchema, PropertyUpdateStatusSchema } from "../schemas/property.schema";
+import { createRooms } from "../controllers/roomController";
+import { RoomCreateSchema } from "../schemas/room.schema";
 
 const router = Router();
 
 router.get("/", getPropertiesUser);
 router.get("/host", getPropertiesHost);
-router.get("/single/:id", validateIntParams(["id"]), getProperty);
-router.get("/single/:id/host", authenticate, authorize(["host"]), validateIntParams(["id"]), getPropertyHost);
+router.get("/single/:id", validate(PropertyIdSchema), getProperty);
+router.get("/single/:id/host", authenticate, authorize(["host"]), validate(PropertyIdSchema), getPropertyHost);
 
-router.get("/single/:id/rooms", validateIntParams(["id"]), getPropertyRooms);
-router.get("/single/:id/reviews", validateIntParams(["id"]), getPropertyReviews);
+router.get("/single/:id/rooms", validate(PropertyIdSchema), getPropertyRooms);
+router.get("/single/:id/reviews", validate(PropertyIdSchema), getPropertyReviews);
 
-router.patch("/single/:id", authenticate, authorize(["host"]), validateIntParams(["id"]), validateIntBodyFields(["statusId", "propertyTypeId"]), updatePropertyDetails);
-router.patch("/single/:id/address", authenticate, authorize(["host"]), validateIntParams(["id"]), validateFloatBodyFields(["latitude", "longitude"]), updatePropertyAddress);
-router.put("/single/:id/amenities", authenticate, authorize(["host"]), validate(updatePropertyAmenitiesSchema), updatePropertyAmenities);
-router.post("/", authenticate, authorize(["host"]), createProperty);
-router.patch("/single/:id/status", authenticate, authorize(["host"]), validateIntParams(["id"]), changePropertyStatus);
+router.post("/", authenticate, authorize(["host"]), validate(PropertyCreateSchema), createProperty);
+router.post("/:id/rooms", authenticate, authorize(["host"]), validate(RoomCreateSchema), createRooms);
 
-router.delete("/single/:id", authenticate, authorize(["host"]), validateIntParams(["id"]), deleteProperty);
+router.patch("/single/:id", authenticate, authorize(["host"]), validate(PropertyUpdateDetailsSchema), updatePropertyDetails);
+router.patch("/single/:id/address", authenticate, authorize(["host"]), validate(PropertyUpdateAddressSchema), updatePropertyAddress);
+router.put("/single/:id/amenities", authenticate, authorize(["host"]), validate(PropertyUpdateAmenitiesSchema), updatePropertyAmenities);
+router.put("/single/:id/status", authenticate, authorize(["host"]), validate(PropertyUpdateStatusSchema), changePropertyStatus);
+
+router.delete("/single/:id", authenticate, authorize(["host"]), validate(PropertyIdSchema), deleteProperty);
 
 router.get("/types", getPropertyTypes);
 

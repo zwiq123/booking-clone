@@ -3,8 +3,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6I
 Content-Type: application/json
 
 {
-    "statusId": 1,
-    "rating": "",
+    "statusId": 2,
     "propertyTypeId": 5,
+    "rating": 3,
     "ownerDescription": "Właściciel sigmiok"
 }

@@ -53,7 +53,7 @@ model Property {
   rating                  Int?
   
   ownerId                 Int
-  owner                   User  @relation(fields: [ownerId], references: [id])
+  owner                   User  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   
   statusId                Int
   status                  PropertyStatus  @relation(fields: [statusId], references: [id])
@@ -92,7 +92,7 @@ model Room {
   id              Int @id @default(autoincrement())
   name            String
   propertyId      Int
-  property        Property  @relation(fields: [propertyId], references: [id])
+  property        Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   capacity        Int @default(1)
   area            Int?
   smokingAllowed  Boolean @default(false)
@@ -108,7 +108,7 @@ model Bed {
   type    BedType @relation(fields: [typeId], references: [id])
   count   Int @default(1)
   roomId  Int
-  room    Room  @relation(fields: [roomId], references: [id])
+  room    Room  @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model BedType {
@@ -126,7 +126,7 @@ model RoomAmenity {
   amenityTypeId   Int
   amenityType     RoomAmenityType @relation(fields: [amenityTypeId], references: [id])
   roomId          Int
-  room            Room  @relation(fields: [roomId], references: [id])
+  room            Room  @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model PropertyAmenity {
@@ -134,7 +134,7 @@ model PropertyAmenity {
   amenityTypeId   Int
   amenityType     PropertyAmenityType @relation(fields: [amenityTypeId], references: [id])
   propertyId      Int
-  property        Property  @relation(fields: [propertyId], references: [id])
+  property        Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 model RoomAmenityType {
@@ -166,7 +166,7 @@ model Review {
   userId      Int
   user        User  @relation(fields: [userId], references: [id])
   propertyId  Int
-  property    Property  @relation(fields: [propertyId], references: [id])
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 // -----UTILS-----
@@ -175,11 +175,11 @@ model Address {
   id          Int @id @default(autoincrement())
   latitude    Float
   longitude   Float
-  country     String
-  state       String
-  city        String
-  postalCode  String
-  street      String
+  country     String?
+  state       String?
+  city        String?
+  postalCode  String?
+  street      String?
   propertyId  Int @unique
   property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
@@ -189,7 +189,7 @@ model Image {
   path        String
   isMain      Boolean @default(false)
   propertyId  Int
-  property    Property  @relation(fields: [propertyId], references: [id])
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 // many-to-many
@@ -198,7 +198,7 @@ model Language {
   languageTypeId  Int
   languageType    LanguageType  @relation(fields: [languageTypeId], references: [id])
   propertyId      Int
-  property        Property  @relation(fields: [propertyId], references: [id])
+  property        Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 model LanguageType {
@@ -211,6 +211,6 @@ model Pricing {
   id      Int @id @default(autoincrement())
   price   Float
   roomId  Int   @unique
-  Room    Room  @relation(fields: [roomId], references: [id])
+  Room    Room  @relation(fields: [roomId], references: [id], onDelete: Cascade)
   // groups/age prices
 }

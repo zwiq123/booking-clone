@@ -1,5 +1,4 @@
 import express from "express";
-import { upload } from "./middleware/fileUpload";
 import path from "path";
 import { authorize, authenticate } from "./middleware/auth";
 import userRoutes from "./routes/userRoutes";

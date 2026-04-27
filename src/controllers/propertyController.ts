@@ -104,17 +104,31 @@ export const createProperty = async (req: Request, res: Response) => {
     res.json({message: "Property added successfully"});
 }
 
+export const deleteProperty = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({message: "Invalid user"});
+    }
+
+    const propertyID = parseInt(req.params.id);
+
+    const property = await prisma.property.findUnique({where: {id: propertyID}});
+
+    if (!property || property.ownerId != req.user.id) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
+    }
+
+    //email users who booked
+
+    await prisma.property.delete({where: {id: propertyID}});
+    res.json({message: `Property successfully deleted.`});
+}
+
 export const changePropertyStatus = async (req: Request, res: Response) => {
     if (!req.user) {
         return res.status(401).json({message: "Invalid user"});
     }
 
-    let propertyID;
-    try {
-        propertyID = parseInt(req.params.id);
-    } catch (err) {
-        return res.status(400).json({message: "Incorrect property ID format"});
-    }
+    const propertyID = parseInt(req.params.id);
 
     const statusId = req.body.statusId;
     if (!statusId) {
@@ -154,12 +168,8 @@ export const changePropertyStatus = async (req: Request, res: Response) => {
 // })
 
 export const getProperty = async (req: Request, res: Response) => {
-    let propertyID;
-    try {
-        propertyID = parseInt(req.params.id);
-    } catch (err) {
-        return res.status(400).json({message: "Incorrect property ID format"});
-    }
+    
+    const propertyID = parseInt(req.params.id);
     
     const property = await prisma.property.findUnique({
         where: {id: propertyID},
@@ -168,6 +178,11 @@ export const getProperty = async (req: Request, res: Response) => {
             type: true,
             propertyTypeId: false,
             statusId: false,
+            address: {
+                select: {
+                    propertyId: false
+                }
+            },
             spokenLanguages: {
                 select: {
                     languageType: {
@@ -261,12 +276,7 @@ export const getPropertyHost = async (req: Request, res: Response) => {
         return res.status(401).json({message: "Invalid user"});
     }
     
-    let propertyID;
-    try {
-        propertyID = parseInt(req.params.id);
-    } catch (err) {
-        return res.status(400).json({message: "Incorrect property ID format"});
-    }
+    const propertyID = parseInt(req.params.id);
     
     const property = await prisma.property.findUnique({
         where: {id: propertyID},
@@ -275,6 +285,18 @@ export const getPropertyHost = async (req: Request, res: Response) => {
             type: true,
             propertyTypeId: false,
             statusId: false,
+            address: {
+                select: {
+                    id: true,
+                    latitude: true,
+                    longitude: true,
+                    country: true,
+                    state: true,
+                    city: true,
+                    postalCode: true,
+                    street: true,
+                }
+            },
             spokenLanguages: {
                 select: {
                     languageType: {
@@ -363,13 +385,140 @@ export const getPropertyHost = async (req: Request, res: Response) => {
     res.json(property);
 }
 
-export const getPropertyRooms = async (req: Request, res: Response) => {
-    let propertyID;
-    try {
-        propertyID = parseInt(req.params.id);
-    } catch (err) {
-        return res.status(400).json({message: "Incorrect property ID format"});
+export const updatePropertyDetails = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({message: "Invalid user"});
     }
+    
+    const {
+        name,
+        propertyDescription,
+        ownerDescription,
+        surroundingsDescription,
+        rating,
+        statusId,
+        propertyTypeId
+    } = req.body;
+
+    const propertyID = parseInt(req.params.id);
+    const property = await prisma.property.findUnique({where: {id: propertyID}});
+
+    if (!property || property.ownerId != req.user.id) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
+    }
+
+    const status = await prisma.propertyStatus.findUnique({where: {id: statusId}});
+    if (!status) {
+         return res.status(404).json({message: `Property status with id ${statusId} not found`});
+    }
+
+    const propertyType = await prisma.propertyType.findUnique({where: {id: propertyTypeId}});
+    if (!propertyType) {
+         return res.status(404).json({message: `Property type with id ${propertyTypeId} not found`});
+    }
+
+    let fixedRating = rating;
+    if (rating !== undefined) {
+        fixedRating = rating === null ? null : parseInt(rating)       
+    }
+
+    await prisma.property.update({
+        where: {id: propertyID},
+        data: {
+            ...(name && {name}),
+            ...(propertyDescription && {propertyDescription}),
+            ...(ownerDescription && {ownerDescription}),
+            ...(surroundingsDescription && {surroundingsDescription}),
+            ...(rating !== undefined && {rating: fixedRating}),
+            ...(propertyTypeId && {propertyTypeId})
+        }
+    })
+
+    res.json({message: `Successfully modified property ${propertyID}`});
+
+}
+
+export const updatePropertyAddress = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({message: "Invalid user"});
+    }
+
+    const propertyID = parseInt(req.params.id);
+    const property = await prisma.property.findUnique({where: {id: propertyID}, include: {address: true}});
+
+    if (!property || property.ownerId != req.user.id) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
+    }
+
+    const {
+        latitude,
+        longitude,
+        country,
+        state,
+        city,
+        postalCode,
+        street
+    } = req.body;
+
+    await prisma.address.update({
+        where: {id: property.address?.id},
+        data: {
+            ...(latitude && {latitude}),
+            ...(longitude && {longitude}),
+            ...(country && {country}),
+            ...(state && {state}),
+            ...(city && {city}),
+            ...(postalCode && {postalCode}),
+            ...(street && {street}),
+        }
+    })
+
+    res.json({message: `Successfully updated address for property ${property.name}`})
+}
+
+export const updatePropertyAmenities = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({message: "Invalid user"});
+    }
+
+    const propertyID = parseInt(req.params.id);
+    const property = await prisma.property.findUnique({where: {id: propertyID}});
+
+    if (!property || property.ownerId != req.user.id) {
+        return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
+    }
+
+    const amenities: number[] = req.body.amenities;
+    const validAmenities = [];
+    for (const amenityID of amenities) {
+        const amenity = await prisma.propertyAmenityType.findUnique({where: {id: amenityID}});
+        if (amenity) {
+            validAmenities.push(amenityID);
+        }
+    }
+
+    await prisma.$transaction([
+        prisma.propertyAmenity.deleteMany({
+            where: {
+                propertyId: propertyID,
+                amenityTypeId: {notIn: validAmenities}
+            }
+        }),
+        prisma.propertyAmenity.createMany({
+            data: validAmenities.map(amenityID => ({
+                propertyId: propertyID, 
+                amenityTypeId: amenityID
+            })),
+            skipDuplicates: true
+        })
+    ])
+
+    res.json({message: `Successfully updated amenities for property ${property.name}`})
+}
+
+export const getPropertyRooms = async (req: Request, res: Response) => {
+    
+    const propertyID = parseInt(req.params.id);
 
     const property = await prisma.property.findUnique({where: {id: propertyID}, include: {rooms: true}});
 
@@ -381,12 +530,8 @@ export const getPropertyRooms = async (req: Request, res: Response) => {
 }
 
 export const getPropertyReviews = async (req: Request, res: Response) => {
-    let propertyID;
-    try {
-        propertyID = parseInt(req.params.id);
-    } catch (err) {
-        return res.status(400).json({message: "Incorrect property ID format"});
-    }
+    
+    const propertyID = parseInt(req.params.id);
 
     const property = await prisma.property.findUnique({where: {id: propertyID}, include: {reviews: true}});
 

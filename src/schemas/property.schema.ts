@@ -1,5 +1,4 @@
 import {z} from "zod";
-import { AnyZodObject } from "zod/v3";
 
 export const PropertyGetUserSchema = z.object({
     query: z.object({
@@ -45,7 +44,7 @@ export const PropertyGetUserSchema = z.object({
         radius: z.coerce.number().positive().optional(),
 
         limit: z.coerce.number().int().min(1).max(150).default(40),
-        sort: z.enum(["price", "id", "rating", "createdAt", "reviews"]).default("id"),
+        sort: z.enum(["id", "rating", "avgReviews"]).default("id"),
         order: z.enum(["asc", "desc"]).default("desc"),
         page: z.coerce.number().int().catch(1)
     })
@@ -53,19 +52,19 @@ export const PropertyGetUserSchema = z.object({
 
 export const PropertyUpdateAmenitiesSchema = z.object({
     body: z.object({
-        amenities: z.array(z.number())
+        amenities: z.array(z.number().int())
     })
 });
 
 export const PropertyIdSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     })
 });
 
 export const PropertyUpdateDetailsSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     }),
     body: z.object({
         name: z.string().optional(),
@@ -77,14 +76,14 @@ export const PropertyUpdateDetailsSchema = z.object({
             const parsed = Number(val);
             return isNaN(parsed) ? val : parsed;
         }, z.number().nullable()).optional(),
-        statusId: z.number().optional(),
-        propertyTypeId: z.number().optional()
+        statusId: z.number().int().optional(),
+        propertyTypeId: z.number().int().optional()
     })
 })
 
 export const PropertyUpdateAddressSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     }),
     body: z.object({
         latitude: z.coerce.number().min(-90).max(90).optional(),
@@ -99,10 +98,10 @@ export const PropertyUpdateAddressSchema = z.object({
 
 export const PropertyUpdateStatusSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     }),
     body: z.object({
-        statusId: z.number()
+        statusId: z.number().int()
     })
 })
 
@@ -123,31 +122,31 @@ export const PropertyCreateSchema = z.object({
             const parsed = Number(val);
             return isNaN(parsed) ? val : parsed;
         }, z.number().nullable()).optional(),
-        type: z.coerce.number(),
+        type: z.number().int(),
         propertyDescription: z.string(),
         ownerDescription: z.string(),
         surroundingsDescription: z.string(),
-        amenities: z.array(z.number()),
-        spokenLanguages: z.array(z.number()),
+        amenities: z.array(z.number().int()),
+        spokenLanguages: z.array(z.number().int()),
         images: z.array(z.object({
             path: z.string(),
             isMain: z.boolean().optional()
         })),
         rooms: z.array(z.object({
             name: z.string(),
-            capacity: z.number(),
+            capacity: z.number().int(),
             area: z.number().optional(),
             smokingAllowed: z.boolean(),
             bathroomPrivate: z.boolean(),
-            amenities: z.array(z.number()),
+            amenities: z.array(z.number().int()),
             beds: z.array(z.object({
-                type: z.number(),
-                count: z.number().optional()
+                type: z.number().int(),
+                count: z.number().int().optional()
             })),
             pricing: z.object({
                 price: z.number()
             }).optional(),
-            count: z.number()
+            count: z.number().int()
         }))
     })
 })

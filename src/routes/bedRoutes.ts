@@ -7,7 +7,7 @@ import { validate } from "../middleware/typeValidation";
 const router = Router();
 
 router.get("/types", getBedTypes);
-router.delete("/single/:id", authenticate, authorize(["host"]), validate(BedDeleteSchema), deleteBed);
-router.patch("/single/:id", authenticate, authorize(["host"]), validate(BedUpdateSchema), updateBed);
+router.delete("/single/:id", authenticate, authorize(["host"]), validate(BedDeleteSchema as any), deleteBed);
+router.patch("/single/:id", authenticate, authorize(["host"]), validate(BedUpdateSchema as any), updateBed);
 
 export default router;

@@ -143,6 +143,15 @@ async function main() {
         ],
         skipDuplicates: true
     })
+
+    await prisma.bookingStatus.createMany({
+        data: [
+            {id: 1, name: "awaiting payment"},
+            {id: 2, name: "confirmed"},
+            {id: 3, name: "in progress"},
+            {id: 4, name: "completed"}
+        ]
+    })
 }
 
 main()

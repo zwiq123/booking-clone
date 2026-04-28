@@ -4,7 +4,7 @@ import { isMainThread } from "worker_threads";
 
 export const uploadImages = async (req: Request, res: Response) => {
     
-    const files = req.files as Express.Multer.File[];
+    const files = (req as any).files as Express.Multer.File[];
 
     if (!files || files.length == 0) {
         return res.status(400).json({message: "No images uploaded"});
@@ -19,10 +19,10 @@ export const uploadImages = async (req: Request, res: Response) => {
 }
 
 export const deleteImage = async (req: Request, res: Response) => {
-    const imageId = parseInt(req.params.id);
+    const imageId = res.locals.params.id;
 
     const image = await prisma.image.findUnique({where: {id: imageId}, include: {property: true}});
-    if (!image || image.property.ownerId != req.user.id) {
+    if (!image || image.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Image with id ${imageId} not found or not yours`});
     }
 
@@ -48,10 +48,10 @@ export const deleteImage = async (req: Request, res: Response) => {
 }
 
 export const setImageMain = async (req: Request, res: Response) => {
-    const imageId = parseInt(req.params.id);
+    const imageId = res.locals.params.id;
 
     const image = await prisma.image.findUnique({where: {id: imageId}, include: {property: true}});
-    if (!image || image.property.ownerId != req.user.id) {
+    if (!image || image.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Image with id ${imageId} not found or not yours`});
     }
 
@@ -64,7 +64,7 @@ export const setImageMain = async (req: Request, res: Response) => {
 }
 
 export const getPropertyImages = async (req: Request, res: Response) => {
-    const propertyId = parseInt(req.params.id);
+    const propertyId = res.locals.params.id;
 
     const property = await prisma.property.findUnique({where: {id: propertyId}});
     if (!property) {

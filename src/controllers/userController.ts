@@ -13,7 +13,6 @@ export const registerUser = async (req: Request, res: Response) => {
     const lastName = req.body.lastName;
     const role = req.body.role ?? "user";
 
-    // validation
     if (!["user", "host"].includes(role)) {
         return res.status(400).json({message: "Invalid user role"});
     }
@@ -81,11 +80,9 @@ export const loginUser = async (req: Request, res: Response) => {
     const password = req.body.password;
     const role = req.body.role ?? "user";
 
-    // checking if user exists
     const roleObject = await prisma.role.findUnique({where: {name: role}});
     if (!roleObject) {
-        // status
-        return res.status(400).json({message: "Database not initialized"});
+        return res.status(501).json({message: "Database not initialized"});
     }
     const user = await prisma.user.findUnique({where: {email_roleId: {email, roleId: roleObject!.id}}, include: {role: true}});
     if (!user) {
@@ -120,7 +117,6 @@ export const verifyRegistration = async (req: Request, res: Response) => {
         return res.status(400).json({message: "Expired verification token"});
     }
 
-    // all at once
     await prisma.$transaction([
         prisma.user.update({
             where: {id: verificationData.userId},
@@ -136,7 +132,7 @@ export const verifyRegistration = async (req: Request, res: Response) => {
 }
 
 export const getUserProfile = async (req: Request, res: Response) => {
-    const userId = parseInt(req.params.id);
+    const userId = res.locals.params.id;
 
     const user = await prisma.user.findUnique({
         where: {id: userId},

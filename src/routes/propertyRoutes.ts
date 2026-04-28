@@ -9,24 +9,24 @@ import { getPropertyImages } from "../controllers/imageController";
 
 const router = Router();
 
-router.get("/", validate(PropertyGetUserSchema), getPropertiesUser);
+router.get("/", validate(PropertyGetUserSchema as any), getPropertiesUser);
 router.get("/host", authenticate, authorize(["host"]), getPropertiesHost);
-router.get("/single/:id", validate(PropertyIdSchema), getProperty);
-router.get("/single/:id/host", authenticate, authorize(["host"]), validate(PropertyIdSchema), getPropertyHost);
+router.get("/single/:id", validate(PropertyIdSchema as any), getProperty);
+router.get("/single/:id/host", authenticate, authorize(["host"]), validate(PropertyIdSchema as any), getPropertyHost);
 
-router.get("/single/:id/images", validate(PropertyIdSchema), getPropertyImages);
-router.get("/single/:id/rooms", validate(PropertyIdSchema), getPropertyRooms);
-router.get("/single/:id/reviews", validate(PropertyIdSchema), getPropertyReviews);
+router.get("/single/:id/images", validate(PropertyIdSchema as any), getPropertyImages);
+router.get("/single/:id/rooms", validate(PropertyIdSchema as any), getPropertyRooms);
+router.get("/single/:id/reviews", validate(PropertyIdSchema as any), getPropertyReviews);
 
-router.post("/", authenticate, authorize(["host"]), validate(PropertyCreateSchema), createProperty);
-router.post("/:id/rooms", authenticate, authorize(["host"]), validate(RoomCreateSchema), createRooms);
+router.post("/", authenticate, authorize(["host"]), validate(PropertyCreateSchema as any), createProperty);
+router.post("/:id/rooms", authenticate, authorize(["host"]), validate(RoomCreateSchema as any), createRooms);
 
-router.patch("/single/:id", authenticate, authorize(["host"]), validate(PropertyUpdateDetailsSchema), updatePropertyDetails);
-router.patch("/single/:id/address", authenticate, authorize(["host"]), validate(PropertyUpdateAddressSchema), updatePropertyAddress);
-router.put("/single/:id/amenities", authenticate, authorize(["host"]), validate(PropertyUpdateAmenitiesSchema), updatePropertyAmenities);
-router.put("/single/:id/status", authenticate, authorize(["host"]), validate(PropertyUpdateStatusSchema), changePropertyStatus);
+router.patch("/single/:id", authenticate, authorize(["host"]), validate(PropertyUpdateDetailsSchema as any), updatePropertyDetails);
+router.patch("/single/:id/address", authenticate, authorize(["host"]), validate(PropertyUpdateAddressSchema as any), updatePropertyAddress);
+router.put("/single/:id/amenities", authenticate, authorize(["host"]), validate(PropertyUpdateAmenitiesSchema as any), updatePropertyAmenities);
+router.put("/single/:id/status", authenticate, authorize(["host"]), validate(PropertyUpdateStatusSchema as any), changePropertyStatus);
 
-router.delete("/single/:id", authenticate, authorize(["host"]), validate(PropertyIdSchema), deleteProperty);
+router.delete("/single/:id", authenticate, authorize(["host"]), validate(PropertyIdSchema as any), deleteProperty);
 
 router.get("/types", getPropertyTypes);
 

@@ -8,10 +8,10 @@ export const getBedTypes = async (req: Request, res: Response) => {
 
 export const createBed = async (req: Request, res: Response) => {
 
-    const roomID = parseInt(req.params.id);
+    const roomID = res.locals.params.id;
 
-    const room = await prisma.room.findUnique({where: {id: roomID}, include: {property: true, pricing: true}});
-    if (!room || room.property.ownerId != req.user.id) {
+    const room = await prisma.room.findUnique({where: {id: roomID}, include: {property: true}});
+    if (!room || room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Room with id ${roomID} not found or not yours`});
     }
 
@@ -34,11 +34,11 @@ export const createBed = async (req: Request, res: Response) => {
 }
 
 export const deleteBed = async (req: Request, res: Response) => {
-    const bedId = parseInt(req.params.id);
+    const bedId = res.locals.params.id;
 
     const bed = await prisma.bed.findUnique({where: {id: bedId}, include: {room: {include: {property: true}}}});
 
-    if (!bed || bed.room.property.ownerId != req.user.id) {
+    if (!bed || bed.room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Bed with id ${bedId} not found or not yours`});
     }
 
@@ -49,11 +49,11 @@ export const deleteBed = async (req: Request, res: Response) => {
 }
 
 export const updateBed = async (req: Request, res: Response) => {
-    const bedId = parseInt(req.params.id);
+    const bedId = res.locals.params.id;
 
     const bed = await prisma.bed.findUnique({where: {id: bedId}, include: {room: {include: {property: true}}}});
 
-    if (!bed || bed.room.property.ownerId != req.user.id) {
+    if (!bed || bed.room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Bed with id ${bedId} not found or not yours`});
     }
 

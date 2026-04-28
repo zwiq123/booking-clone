@@ -18,7 +18,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded as {id: number, role: string};
+        (req as any).user = decoded as {id: number, role: string};
         next();
     } catch (err) {
         return res.status(401).json({message: "Invalid authentication token"});
@@ -27,7 +27,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
 export const authorize = (roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        if (!req.user || !roles.includes(req.user.role)) {
+        if (!req.user || !roles.includes((req as any).user.role)) {
             res.status(403).json({message: "Wrong user role"});
         }
         next();

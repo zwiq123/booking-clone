@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { authenticate, authorize } from "../middleware/auth";
 import { getPropertyAmenityTypes, getRoomAmenityCategories, getRoomAmenityTypes } from "../controllers/amenityController";
 
 const router = Router();

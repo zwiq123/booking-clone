@@ -7,7 +7,7 @@ export const UserRegisterSchema = z.object({
         confirmPassword: z.string(),
         firstName: z.string(),
         lastName: z.string(),
-        rol: z.string().optional()
+        role: z.string().optional()
     })
 })
 

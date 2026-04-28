@@ -9,10 +9,10 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
+    destination: (req: Request, file: File, callback) => {
         callback(null, uploadDir)
     },
-    filename: (req, file, callback) => {
+    filename: (req: Request, file: File, callback) => {
         const suffix = Date.now() + "-" + Math.round(Math.random() * 99999999)
         callback(null, file.fieldname + "-" + suffix + path.extname(file.originalname))
     }

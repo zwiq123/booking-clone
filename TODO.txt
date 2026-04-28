@@ -1,72 +1,9 @@
------MODELS-----
-
-pricing model
-bookings model
-category model + seed
-subcategory model + seed
-
------ADDRESS----
-
-latitude/longitude calculation
-prisma.$queryRaw``;
-ST_DWithin(
-    ST_MakePoint(longitude, latitude))::geography,
-    ...,
-    radius in meters
-)
-ST_Distance_Sphere(
-    point(longitude, latitude),
-    point(...)
-) AS Distance
-
------MISCELLANEOUS-----
-
 booking scraping
-all seeds
 
 host dashboard:
 - properties
 - reservations
 - reviews
-
------MECHANICS-----
-
-change password
-
-sortType=[near, rating, reviews, price], 
-sort=[desc, asc]
-rating=
-minRating=
-minPrice=
-maxPrice=
-maxDistance=
-...
-
-payment (card numbers)
-
-bookings
-
------ENDPOINTS-----
-
-GET /properties
-GET /properties/:id
-
-POST /properties (host)
-PUT /properties/:id (host)
-DELETE /porperites/:id (host)
-
-GET /properties/:id/rooms
-POST /rooms (host)
-
-POST /bookings
-GET /bookings (jwt) (bookings made by you)
-GET /bookings (jwt) (host) (bookings made for your properties)
-...
-
-POST /reviews (user) (restrict to users who had a booking (successful))
-GET /properties/:id/reviews
-
-...
 
 -----SCENARIOS-----
 
@@ -100,9 +37,6 @@ rooms (type, count, beds, guest count, optional size, smoking, amenities, name, 
 payment
 business details
 
-
--------------
-
 -----AFTER-----
 delete register messages 1,2
 check every validation case
@@ -112,17 +46,81 @@ try catch
 
 
 -----PLAN-----
-images upload [x]
-everything about properties host-side (get, delete, update (rooms, amenities, info))
-properties user-side (get, filter, sort)
 
-pricing
-
-bookings (model, creation, saving the spot (when user start booking))
-payment (card info, etc)
-displaying bookings (user, host)
 bookings management
 
 reviews creation (check if user had a booking, limit to one)
 get reviews, edit, delete, calculate rating when displaying properties
+
+----------DONE----------
+
+-----USERS-----
+
+POST /users/register
+POST /users/login
+GET /users/verify/registration
+GET /profile/:id
+...(password reset)
+
+-----PROPERTIES-----
+
+GET /properties
+GET /properties/host
+GET /properties/single/:id
+GET /properties/single/:id/host
+
+GET /properties/single/:id/images
+GET /properties/single/:id/rooms
+GET /properties/single/:id/reviews
+
+POST /properties
+POST /properties/:id/rooms
+
+PATCH /properties/single/:id
+PATCH /properties/single/:id/address
+PUT /properties/single/:id/amenities
+PUT /properties/single/:id/status
+
+DELETE /properties/single/:id
+
+GET /properties/types
+
+-----ROOMS-----
+
+GET /rooms/single/:id
+PATCH /rooms/single/:id
+DELETE /rooms/single/:id
+PUT /rooms/single/:id/pricing
+PUT /rooms/single/:id/amenities
+POST /rooms/single/:id/beds
+
+-----AMENITIES-----
+
+GET /amenities/room/types
+GET /amenities/room/categories
+GET /amenities/property/types
+
+-----BOOKINGS-----
+
+POST /bookings/create
+POST /bookings/payment
+GET /bookings
+GET /bookings/host
+PATCH /bookings/update
+
+----------
+
+POST /reviews
+
+GET /beds/types
+DELETE /beds/single/:id
+PATCH /beds/single/:id
+
+GET /languages
+
+POST /images/upload
+DELETE /images/single/:id
+PUT /images/single/:id/setMain
+
+
 

@@ -2,16 +2,25 @@ import { Request, Response } from "express";
 import { prisma } from "../services/prismaInit";
 import { property } from "zod";
 
-export const createRooms = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
+export const getRoom = async (req: Request, res: Response) => {
+    const roomId = res.locals.params.id;
+
+    const room = await prisma.room.findUnique({where: {id: roomId}, include: {bookings: true}});
+
+    if (!room) {
+        return res.status(404).json({message: `Room with id ${roomId} not found`});
     }
 
-    const propertyID = parseInt(req.params.id);
+    res.json(room);
+}
+
+export const createRooms = async (req: Request, res: Response) => {
+
+    const propertyID = res.locals.params.id;
     
     const property = await prisma.property.findUnique({where: {id: propertyID}});
 
-    if (!property || property.ownerId != req.user.id) {
+    if (!property || property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
@@ -48,14 +57,11 @@ export const createRooms = async (req: Request, res: Response) => {
 }
 
 export const updateRoom = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const roomID = parseInt(req.params.id);
+    const roomID = res.locals.params.id;
 
     const room = await prisma.room.findUnique({where: {id: roomID}, include: {property: true}});
-    if (!room || room.property.ownerId != req.user.id) {
+    if (!room || room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Room with id ${roomID} not found or not yours`});
     }
 
@@ -84,14 +90,11 @@ export const updateRoom = async (req: Request, res: Response) => {
 }
 
 export const deleteRoom = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const roomID = parseInt(req.params.id);
+    const roomID = res.locals.params.id;
 
     const room = await prisma.room.findUnique({where: {id: roomID}, include: {property: true}});
-    if (!room || room.property.ownerId != req.user.id) {
+    if (!room || room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Room with id ${roomID} not found or not yours`});
     }
 
@@ -106,10 +109,10 @@ export const deleteRoom = async (req: Request, res: Response) => {
 
 export const updateRoomPricing = async (req: Request, res: Response) => {
 
-    const roomID = parseInt(req.params.id);
+    const roomID = res.locals.params.id;
 
     const room = await prisma.room.findUnique({where: {id: roomID}, include: {property: true, pricing: true}});
-    if (!room || room.property.ownerId != req.user.id) {
+    if (!room || room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Room with id ${roomID} not found or not yours`});
     }
 
@@ -137,10 +140,10 @@ export const updateRoomPricing = async (req: Request, res: Response) => {
 
 export const updateRoomAmenities = async (req: Request, res: Response) => {
 
-    const roomID = parseInt(req.params.id);
+    const roomID = res.locals.params.id;
 
     const room = await prisma.room.findUnique({where: {id: roomID}, include: {property: true, pricing: true}});
-    if (!room || room.property.ownerId != req.user.id) {
+    if (!room || room.property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Room with id ${roomID} not found or not yours`});
     }
 

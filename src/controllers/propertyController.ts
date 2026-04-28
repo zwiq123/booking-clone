@@ -91,7 +91,7 @@ export const getPropertiesUser = async (req: Request, res: Response) => {
 
 export const getPropertiesHost = async (req: Request, res: Response) => {
     const properties = await prisma.property.findMany({
-        where: {ownerId: req.user.id},
+        where: {ownerId: (req as any).user.id},
         include: {
             amenities: true,
             rooms: true,
@@ -103,11 +103,8 @@ export const getPropertiesHost = async (req: Request, res: Response) => {
 }
 
 export const createProperty = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const userID: number = req.user?.id;
+    const userID: number = (req as any).user.id;
     const propertyName: string = req.body.name;
     const address = req.body.address;
     const rating = req.body.rating ?? null
@@ -117,7 +114,7 @@ export const createProperty = async (req: Request, res: Response) => {
     const surroundingsDescription = req.body.surroundingsDescription ?? "";
     const amenities = req.body.amenities;
     const spokenLanguages = req.body.spokenLanguages;
-    const images = req.body.images; // to change
+    const images = req.body.images;
     const rooms = req.body.rooms;
 
     const property = await prisma.property.create({
@@ -142,13 +139,13 @@ export const createProperty = async (req: Request, res: Response) => {
                 }
             },
             amenities: {
-                create: amenities.map(amenityID => ({amenityTypeId: amenityID}))
+                create: amenities.map((amenityID: number) => ({amenityTypeId: amenityID}))
             },
             spokenLanguages: {
-                create: spokenLanguages.map(languageID => ({languageTypeId: languageID}))
+                create: spokenLanguages.map((languageID: number) => ({languageTypeId: languageID}))
             },
             images: {
-                create: images.map(img => ({path: img.path, isMain: img.isMain ?? false}))
+                create: images.map((img: any) => ({path: img.path, isMain: img.isMain ?? false}))
             }
         }
     });
@@ -167,10 +164,10 @@ export const createProperty = async (req: Request, res: Response) => {
                     smokingAllowed: room.smokingAllowed,
                     bathroomPrivate: room.bathroomPrivate,
                     beds: {
-                        create: room.beds.map(bed => ({typeId: bed.type, count: bed.count ?? 1}))
+                        create: room.beds.map((bed: any) => ({typeId: bed.type, count: bed.count ?? 1}))
                     },
                     amenities: {
-                        create: validAmenities.map(amenityId => ({amenityTypeId: amenityId}))
+                        create: validAmenities.map((amenityId: number) => ({amenityTypeId: amenityId}))
                     },
                     pricing: room.pricing ? {
                         create: {price: room.pricing.price}
@@ -184,15 +181,12 @@ export const createProperty = async (req: Request, res: Response) => {
 }
 
 export const deleteProperty = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
 
     const property = await prisma.property.findUnique({where: {id: propertyID}});
 
-    if (!property || property.ownerId != req.user.id) {
+    if (!property || property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
@@ -203,11 +197,8 @@ export const deleteProperty = async (req: Request, res: Response) => {
 }
 
 export const changePropertyStatus = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
 
     const statusId = req.body.statusId;
     if (!statusId) {
@@ -225,7 +216,7 @@ export const changePropertyStatus = async (req: Request, res: Response) => {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
-    if (property.ownerId != req.user.id) {
+    if (property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
@@ -238,17 +229,9 @@ export const changePropertyStatus = async (req: Request, res: Response) => {
 
 }
 
-// app.put("/properties/:id", authenticate, authorize(["host"]), async (req, res) => {
-//     if (!req.user) {
-//         return res.status(401).json({message: "Invalid user"});
-//     }
-
-
-// })
-
 export const getProperty = async (req: Request, res: Response) => {
     
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
     
     const property = await prisma.property.findUnique({
         where: {id: propertyID},
@@ -358,11 +341,8 @@ export const getProperty = async (req: Request, res: Response) => {
 }
 
 export const getPropertyHost = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
-    
-    const propertyID = parseInt(req.params.id);
+
+    const propertyID = res.locals.params.id;
     
     const property = await prisma.property.findUnique({
         where: {id: propertyID},
@@ -464,7 +444,7 @@ export const getPropertyHost = async (req: Request, res: Response) => {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
-    if (property.ownerId != req.user.id) {
+    if (property.ownerId != (req as any).user.id) {
         return res.status(401).json({message: `Property with id ${propertyID} not found or not yours`})
     }
 
@@ -472,9 +452,6 @@ export const getPropertyHost = async (req: Request, res: Response) => {
 }
 
 export const updatePropertyDetails = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
     
     const {
         name,
@@ -486,10 +463,10 @@ export const updatePropertyDetails = async (req: Request, res: Response) => {
         propertyTypeId
     } = req.body;
 
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
     const property = await prisma.property.findUnique({where: {id: propertyID}});
 
-    if (!property || property.ownerId != req.user.id) {
+    if (!property || property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
@@ -525,14 +502,11 @@ export const updatePropertyDetails = async (req: Request, res: Response) => {
 }
 
 export const updatePropertyAddress = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
     const property = await prisma.property.findUnique({where: {id: propertyID}, include: {address: true}});
 
-    if (!property || property.ownerId != req.user.id) {
+    if (!property || property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
@@ -563,14 +537,11 @@ export const updatePropertyAddress = async (req: Request, res: Response) => {
 }
 
 export const updatePropertyAmenities = async (req: Request, res: Response) => {
-    if (!req.user) {
-        return res.status(401).json({message: "Invalid user"});
-    }
 
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
     const property = await prisma.property.findUnique({where: {id: propertyID}});
 
-    if (!property || property.ownerId != req.user.id) {
+    if (!property || property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
 
@@ -604,7 +575,7 @@ export const updatePropertyAmenities = async (req: Request, res: Response) => {
 
 export const getPropertyRooms = async (req: Request, res: Response) => {
     
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
 
     const property = await prisma.property.findUnique({where: {id: propertyID}, include: {rooms: true}});
 
@@ -617,7 +588,7 @@ export const getPropertyRooms = async (req: Request, res: Response) => {
 
 export const getPropertyReviews = async (req: Request, res: Response) => {
     
-    const propertyID = parseInt(req.params.id);
+    const propertyID = res.locals.params.id;
 
     const property = await prisma.property.findUnique({where: {id: propertyID}, include: {reviews: true}});
 

@@ -2,26 +2,26 @@ import {z} from "zod";
 
 export const BedCreateSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     }),
     body: z.object({
-        type: z.number(),
+        type: z.number().int(),
         count: z.number().optional()
     })
 })
 
 export const BedDeleteSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     })
 })
 
 export const BedUpdateSchema = z.object({
     params: z.object({
-        id: z.coerce.number()
+        id: z.coerce.number().int()
     }),
     body: z.object({
-        type: z.number().optional(),
-        count: z.number().optional()
+        type: z.number().int().optional(),
+        count: z.number().int().optional()
     })
 })

@@ -26,6 +26,7 @@ model User {
   role                Role    @relation(fields: [roleId], references: [id])
   properties          Property[]
   reviews             Review[]
+  bookings            Booking[]
 
   @@unique([email, roleId])
 }
@@ -101,6 +102,7 @@ model Room {
   beds            Bed[]
   amenities       RoomAmenity[]
   pricing         Pricing?
+  bookings        Booking[]
 }
 
 model Bed {
@@ -158,6 +160,30 @@ model RoomAmenityCategory {
   amenityTypes  RoomAmenityType[]
 }
 
+// -----BOOKINGS-----
+
+model Booking {
+  id          Int @id @default(autoincrement())
+  statusId    Int @default(1)
+  status      BookingStatus @relation(fields: [statusId], references: [id])
+  roomId      Int
+  room        Room  @relation(fields: [roomId], references: [id])
+  userId      Int
+  user        User  @relation(fields: [userId], references: [id])
+  checkIn     DateTime
+  checkOut    DateTime
+  guestCount  Int
+  totalPrice  Decimal
+  createdAt   DateTime  @default(now())
+  review      Review[]
+}
+
+model BookingStatus {
+  id        Int @id @default(autoincrement())
+  name      String
+  bookings  Booking[]
+}
+
 // -----REVIEWS-----
 
 model Review {
@@ -166,6 +192,8 @@ model Review {
   content     String?
   userId      Int
   user        User  @relation(fields: [userId], references: [id])
+  bookingId   Int
+  booking     Booking @relation(fields: [bookingId], references: [id])
   propertyId  Int
   property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }

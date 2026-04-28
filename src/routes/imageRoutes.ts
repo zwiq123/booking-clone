@@ -8,7 +8,7 @@ import { validate } from "../middleware/typeValidation";
 const router = Router();
 
 router.post("/upload", authenticate, authorize(["host"]), upload.array("images", 5), uploadImages);
-router.delete("/single/:id", authenticate, authorize(["host"]), validate(ImageIdSchema), deleteImage);
-router.put("/single/:id/setMain", authenticate, authorize(["host"]), validate(ImageIdSchema), setImageMain);
+router.delete("/single/:id", authenticate, authorize(["host"]), validate(ImageIdSchema as any), deleteImage);
+router.put("/single/:id/setMain", authenticate, authorize(["host"]), validate(ImageIdSchema as any), setImageMain);
 
 export default router;

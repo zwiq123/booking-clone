@@ -1,13 +1,15 @@
 import {Router} from 'express';
-import { getUserProfile, loginUser, registerUser, verifyRegistration } from '../controllers/userController';
+import { getUserProfile, getUserProfileSelf, loginUser, registerUser, verifyRegistration } from '../controllers/userController';
 import { validate } from '../middleware/typeValidation';
-import { UserIdSchema, UserLoginSchema, UserRegisterSchema } from '../schemas/user.schema';
+import { UserAccountVerificationSchema, UserIdSchema, UserLoginSchema, UserRegisterSchema } from '../schemas/user.schema';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
 router.post("/register", validate(UserRegisterSchema as any), registerUser);
-router.post("/login", loginUser);
-router.get("/verify/registration", validate(UserLoginSchema as any), verifyRegistration);
+router.post("/login", validate(UserLoginSchema as any), loginUser);
+router.get("/verify/registration", validate(UserAccountVerificationSchema as any), verifyRegistration);
 router.get("/profile/:id", validate(UserIdSchema as any), getUserProfile)
+router.get("/profile", authenticate, getUserProfileSelf);
 
 export default router;

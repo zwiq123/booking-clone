@@ -64,7 +64,7 @@ export const registerUser = async (req: Request, res: Response) => {
         }
     });
     
-    const verificationLink = `http://localhost:3000/verify/registration?token=${verificationToken}`;
+    const verificationLink = `http://localhost:3000/api/users/verify/registration?token=${verificationToken}`;
    
     await transporter.sendMail({
         from: `"Booking clone" <${process.env.GMAIL_NAME}>`,
@@ -153,4 +153,18 @@ export const getUserProfile = async (req: Request, res: Response) => {
     }
 
     res.json(user);
+}
+
+export const getUserProfileSelf = async (req: Request, res: Response) => {
+    const userId = (req as any).user.id;
+
+    const user = await prisma.user.findUnique({
+        where: {id: userId}
+    });
+
+    res.json(user);
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+    const userId = (req as any).user.id;
 }

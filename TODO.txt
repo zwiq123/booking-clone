@@ -59,7 +59,9 @@ get reviews, edit, delete, calculate rating when displaying properties
 POST /users/register
 POST /users/login
 GET /users/verify/registration
-GET /profile/:id
+GET /users/profile/:id
+GET /users/profile
+GET /users/passwordreset
 ...(password reset)
 
 -----PROPERTIES-----
@@ -111,6 +113,7 @@ PATCH /bookings/update
 ----------
 
 POST /reviews
+DELETE /reviews/single/:id
 
 GET /beds/types
 DELETE /beds/single/:id

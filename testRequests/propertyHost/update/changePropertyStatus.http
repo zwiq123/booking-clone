@@ -1,5 +1,5 @@
-PUT http://localhost:3000/api/properties/single/2/status HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzcxNTc5ODMsImV4cCI6MTc3NzI0NDM4M30.3smMligNEUikxS7u0Cyp9XZ28xtdc7C-nVX2Fdv4Dec
+PUT http://localhost:3000/api/properties/single/4/status HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzczNTYzNjEsImV4cCI6MTc3NzQ0Mjc2MX0.T_hbw-PfCqP_yr4SwQPGX-ycHoYVeojoCSTXkmCexn8
 Content-Type: application/json
 
 {

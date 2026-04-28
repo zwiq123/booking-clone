@@ -117,6 +117,8 @@ export const createProperty = async (req: Request, res: Response) => {
     const images = req.body.images;
     const rooms = req.body.rooms;
 
+    amenities.map((amenityID: number) => console.log({amenityTypeId: amenityID}))
+
     const property = await prisma.property.create({
         data: {
             name: propertyName,

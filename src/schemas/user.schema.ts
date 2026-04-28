@@ -24,3 +24,9 @@ export const UserIdSchema = z.object({
         id: z.coerce.number()
     })
 })
+
+export const UserAccountVerificationSchema = z.object({
+    query: z.object({
+        token: z.string()
+    })
+})

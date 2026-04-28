@@ -1,5 +1,5 @@
 POST http://localhost:3000/api/properties HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzcyNDc5NzYsImV4cCI6MTc3NzMzNDM3Nn0.HwWGZ6yb56KPHOTdE3oMSsOEtEFbZNNskx9jr3YttQM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzczNTYzNjEsImV4cCI6MTc3NzQ0Mjc2MX0.T_hbw-PfCqP_yr4SwQPGX-ycHoYVeojoCSTXkmCexn8
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
     "propertyDescription": "Hotel elo",
     "ownerDescription": "Właściciel sigma",
     "surroundingsDescription": "Okolica spoko",
-    "amenities": [51, 49, 32, 35],
+    "amenities": [11, 10, 9],
     "spokenLanguages": [1, 2],
     "images": [
         {"isMain": true, "path": "/uploads/images-1777162646767-2125676.jpg"},

@@ -126,7 +126,7 @@ export const PropertyCreateSchema = z.object({
         propertyDescription: z.string(),
         ownerDescription: z.string(),
         surroundingsDescription: z.string(),
-        amenities: z.array(z.number().int()),
+        amenities: z.array(z.number().int().min(1).max(20)),
         spokenLanguages: z.array(z.number().int()),
         images: z.array(z.object({
             path: z.string(),

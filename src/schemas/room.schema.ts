@@ -5,20 +5,22 @@ export const RoomCreateSchema = z.object({
         id: z.coerce.number().int()
     }),
     body: z.object({
-        name: z.string(),
-        count: z.number().int().optional(),
-        capacity: z.number().int(),
-        area: z.number().optional(),
-        smokingAllowed: z.boolean(),
-        bathroomPrivate: z.boolean(),
-        beds: z.array(z.object({
-            type: z.number().int(),
-            count: z.number().int().optional()
-        })),
-        amenities: z.array(z.number().int()),
-        pricing: z.object({
-            price: z.number()
-        }).optional()
+        rooms: z.array(z.object({
+            name: z.string(),
+            count: z.number().int().optional(),
+            capacity: z.number().int(),
+            area: z.number().optional(),
+            smokingAllowed: z.boolean(),
+            bathroomPrivate: z.boolean(),
+            beds: z.array(z.object({
+                type: z.number().int(),
+                count: z.number().int().optional()
+            })),
+            amenities: z.array(z.number().int()),
+            pricing: z.object({
+                price: z.number()
+            }).optional()
+        }))
     })
 })
 

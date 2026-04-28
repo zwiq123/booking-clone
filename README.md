@@ -1,18 +1,19 @@
 # booking-clone
 A clone of booking.com
 
+# Setup:
+Insert these commands inside the terminal in order:
+ - git clone https://github.com/zwiq123/booking-clone.git
+ - npm i
+ - npx prisma generate
+ - npx prisma db seed (this sets up static data in the database)
+ - npm run dev (this starts the server)
+
 # .env:
  - DATABASE_URL - database connection string in this format: "postgresql://username:password@localhost:5432/dbname"
  - JWT_SECRET - string for hashing jsonwebtokens
  - GMAIL_NAME - smtp mail address
  - GMAIL_PASSWORD - password to log in to the mail above
-
-# Setup:
-Insert these commands inside the terminal in order:
- - git clone https://github.com/zwiq123/booking-clone.git
- - npx prisma generate
- - npx prisma db seed (this sets up static data in the database)
- - npm run dev (this starts the server)
 
 # Endpoints:
 -----USERS-----

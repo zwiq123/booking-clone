@@ -1,0 +1,24 @@
+POST http://localhost:3000/api/properties/4/rooms HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzczNTYzNjEsImV4cCI6MTc3NzQ0Mjc2MX0.T_hbw-PfCqP_yr4SwQPGX-ycHoYVeojoCSTXkmCexn8
+Content-Type: application/json
+
+{
+    "rooms": [
+        {
+            "name": "pokój elo new",
+            "capacity": 5,
+            "area": 200,
+            "smokingAllowed": true,
+            "bathroomPrivate": true,
+            "beds": [
+                {"type": 3, "count": 3},
+                {"type": 1}
+            ],
+            "amenities": [1, 13, 26, 33],
+            "pricing": {
+                "price": 123.45
+            },
+            "count": 2
+        }
+    ]
+}

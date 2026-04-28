@@ -61,7 +61,8 @@ POST /users/login
 GET /users/verify/registration
 GET /users/profile/:id
 GET /users/profile
-GET /users/passwordreset
+
+GET /users/passwordreset (not done)
 ...(password reset)
 
 -----PROPERTIES-----
@@ -127,3 +128,5 @@ PUT /images/single/:id/setMain
 
 
 
+docker container run
+tests

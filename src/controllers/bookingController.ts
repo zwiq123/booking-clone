@@ -41,7 +41,7 @@ export const createBooking = async (req: Request, res: Response) => {
     })
 
     if (existingBooking) {
-        return res.json({message: "Room is already booked for these dates"});
+        return res.status(400).json({message: "Room is already booked for these dates"});
     }
 
     const diffInMs = new Date(newCheckOut).getTime() - new Date(newCheckIn).getTime();
@@ -80,6 +80,10 @@ export const payForBooking = async (req: Request, res: Response) => {
 
     if (!booking || booking.userId != (req as any).user.id) {
         return res.status(404).json({message: `Booking with id ${bookingId} not found or not yours`});
+    }
+
+    if (booking.statusId != 1) {
+        return res.status(400).json({message: "Booking already paid"});
     }
 
     if (cardNumber === "1111111111111111") {

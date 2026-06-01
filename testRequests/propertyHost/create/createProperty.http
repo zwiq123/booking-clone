@@ -1,5 +1,5 @@
 POST http://localhost:3000/api/properties HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6Imhvc3QiLCJpYXQiOjE3NzczNTYzNjEsImV4cCI6MTc3NzQ0Mjc2MX0.T_hbw-PfCqP_yr4SwQPGX-ycHoYVeojoCSTXkmCexn8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsInJvbGUiOiJob3N0IiwiaWF0IjoxNzgwMzUzMzU1LCJleHAiOjE3ODA0Mzk3NTV9.FcnMXO9y9EynJyNXQd82-S5nUTavU6T_v1ARaXfLtB4
 Content-Type: application/json
 
 {

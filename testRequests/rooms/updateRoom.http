@@ -1,7 +1,11 @@
-PUT http://localhost:3000/api/properties/single/1/amenities HTTP/1.1
+PATCH http://localhost:3000/api/rooms/single/1 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsInJvbGUiOiJob3N0IiwiaWF0IjoxNzgwMzU0MzA0LCJleHAiOjE3ODA0NDA3MDR9.NQ_f3Z_FvKEjZiGS5MfmNocKxVd-dLt-xZa4pt1Fumw
 Content-Type: application/json
 
 {
-    "amenities": [1, 2, 3]
+    "name": "pokój elo updated",
+    "area": 67,
+    "smokingAllowed": false,
+    "bathroomPrivate": false,
+    "capacity": 5
 }

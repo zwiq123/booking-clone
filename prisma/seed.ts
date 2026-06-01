@@ -4,7 +4,7 @@ import pg from 'pg';
 import 'dotenv/config'
 
 
-const pool = new pg.Pool({connectionString: process.env.DATABASE_URL});
+const pool = new pg.Pool({connectionString: `postgresql://postgres:${process.env.POSTGRES_PASSWORD}@db:5432/${process.env.POSTGRES_DB}`});
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({adapter});
 
@@ -183,7 +183,8 @@ async function main() {
                 {id: 2, name: "confirmed"},
                 {id: 3, name: "in progress"},
                 {id: 4, name: "completed"}
-            ]
+            ],
+            skipDuplicates: true
         })
     } catch (e) {
         console.log('BookingStatus table may not exist yet')

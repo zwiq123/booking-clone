@@ -30,7 +30,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const existingUser = await prisma.user.findUnique({where: {email_roleId: {email, roleId: roleObject!.id}}});
     
     if (existingUser && existingUser.accountVerified) {
-        return res.json({message: "1Account creation successfull. You will receive an email with a verification link shortly."});
+        return res.json({message: "Account creation successfull. You will receive an email with a verification link shortly."});
     }
 
     if (existingUser && !existingUser.accountVerified) {
@@ -72,7 +72,7 @@ export const registerUser = async (req: Request, res: Response) => {
         subject: "Booking clone account verification",
         html: `<p><b>Welcome,</b></p><p>Please verify you email <a href="${verificationLink}">here</a></p>`
     });
-    return res.json({message: "2Account creation successfull. You will receive an email with a verification link shortly."});
+    return res.json({message: "Account creation successfull. You will receive an email with a verification link shortly."});
 }
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -84,7 +84,7 @@ export const loginUser = async (req: Request, res: Response) => {
     if (!roleObject) {
         return res.status(501).json({message: "Database not initialized"});
     }
-    const user = await prisma.user.findUnique({where: {email_roleId: {email, roleId: roleObject!.id}}, include: {role: true}});
+    const user = await prisma.user.findUnique({where: {email_roleId: {email, roleId: roleObject!.id}, accountVerified: true}, include: {role: true}});
     if (!user) {
         return res.status(401).json({message: "Invalid credentials"});
     }
@@ -100,6 +100,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const verifyRegistration = async (req: Request, res: Response) => {
     const token = req.query.token as string;
+    console.log("hello")
 
     if (!token) {
         return res.status(400).json({message: "Missing token"});
@@ -128,7 +129,7 @@ export const verifyRegistration = async (req: Request, res: Response) => {
     ]);
 
     // redirect ?
-    res.json({message: "Account verified. You can now log in."});
+    res.send("<h1>Account verified. You can now log in.</h1>");
 }
 
 export const getUserProfile = async (req: Request, res: Response) => {

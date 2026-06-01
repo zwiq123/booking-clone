@@ -10,6 +10,6 @@ export default defineConfig({
     seed: "ts-node prisma/seed.ts"
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: `postgresql://postgres:${process.env["POSTGRES_PASSWORD"]}@db:5432/${process.env["POSTGRES_DB"]}`,
   },
 });

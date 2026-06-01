@@ -53,6 +53,9 @@ export const PropertyGetUserSchema = z.object({
 export const PropertyUpdateAmenitiesSchema = z.object({
     body: z.object({
         amenities: z.array(z.number().int())
+    }),
+    params: z.object({
+        id: z.coerce.number().int()
     })
 });
 

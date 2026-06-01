@@ -303,6 +303,7 @@ export const getProperty = async (req: Request, res: Response) => {
                     area: true,
                     smokingAllowed: true,
                     bathroomPrivate: true,
+                    pricing: true,
                     beds: {
                         select: {
                             id: true,
@@ -406,6 +407,7 @@ export const getPropertyHost = async (req: Request, res: Response) => {
                     }
                 }
             },
+            bookings: true,
             rooms: {
                 select: {
                     id: true,
@@ -414,6 +416,7 @@ export const getPropertyHost = async (req: Request, res: Response) => {
                     area: true,
                     smokingAllowed: true,
                     bathroomPrivate: true,
+                    pricing: true,
                     beds: {
                         select: {
                             id: true,
@@ -462,7 +465,7 @@ export const updatePropertyDetails = async (req: Request, res: Response) => {
         surroundingsDescription,
         rating,
         statusId,
-        propertyTypeId
+        propertyTypeId,
     } = req.body;
 
     const propertyID = res.locals.params.id;
@@ -542,7 +545,6 @@ export const updatePropertyAmenities = async (req: Request, res: Response) => {
 
     const propertyID = res.locals.params.id;
     const property = await prisma.property.findUnique({where: {id: propertyID}});
-
     if (!property || property.ownerId != (req as any).user.id) {
         return res.status(404).json({message: `Property with id ${propertyID} not found or not yours`});
     }
@@ -559,8 +561,7 @@ export const updatePropertyAmenities = async (req: Request, res: Response) => {
     await prisma.$transaction([
         prisma.propertyAmenity.deleteMany({
             where: {
-                propertyId: propertyID,
-                amenityTypeId: {notIn: validAmenities}
+                propertyId: propertyID
             }
         }),
         prisma.propertyAmenity.createMany({

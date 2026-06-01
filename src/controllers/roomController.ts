@@ -73,16 +73,16 @@ export const updateRoom = async (req: Request, res: Response) => {
         bathroomPrivate
     } = req.body;
 
+    console.log(smokingAllowed, bathroomPrivate)
+
     await prisma.room.update({
         where: {id: roomID},
         data: {
             ...(name && {name}),
             ...(capacity && {capacity}),
             ...(area && {area}),
-            ...(smokingAllowed && {smokingAllowed}),
-            ...(bathroomPrivate && bathroomPrivate),
-            ...(area && {area}),
-            ...(area && {area})
+            ...(smokingAllowed !== undefined && {smokingAllowed}),
+            ...(bathroomPrivate !== undefined && {bathroomPrivate})
         }
     })
 

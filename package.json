@@ -4,7 +4,7 @@
   "description": "A clone of booking.com",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --poll src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },

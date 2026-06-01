@@ -9,6 +9,7 @@ import bedRoutes from "./routes/bedRoutes";
 import languageRoutes from "./routes/languageRoutes";
 import bookingRoutes from "./routes/bookingRoutes";
 import roomRoutes from "./routes/roomRoutes";
+import reviewRoutes from "./routes/reviewRoutes";
 
 const PORT = 3000;
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/beds', bedRoutes);
 app.use("/api/languages", languageRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/rooms", roomRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", authenticate, authorize(["user"]), (req, res) => {
     res.send("hello world");

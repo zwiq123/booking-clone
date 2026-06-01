@@ -108,17 +108,12 @@ The API will be available at `http://localhost:3000`
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/booking_clone
-
-# JWT
-JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
-
-# Email (SMTP)
-GMAIL_NAME=your-email@gmail.com
-GMAIL_PASSWORD=your-app-specific-password
-
-# Server
+POSTGRES_PASSWORD="booking_password"
+POSTGRES_DB="booking"
+JWT_SECRET="abcd"
+MAIL_NAME="abcd@gmail.com"
+MAIL_PASSWORD="password"
+MAIL_SERVER="smtp.example.com"
 PORT=3000
 NODE_ENV=development
 ```
@@ -127,10 +122,12 @@ NODE_ENV=development
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/db` |
-| `JWT_SECRET` | Secret key for signing JWT tokens | `your_random_secret_key` |
-| `GMAIL_NAME` | SMTP email address for sending emails | `noreply@example.com` |
-| `GMAIL_PASSWORD` | SMTP password or app-specific password | `xxxx xxxx xxxx xxxx` |
+| `POSTGRES_PASSWORD` | Password for postgres user "postgres" | `zaq1@WSX` |
+| `POSTGRES_DB` | Name of the postgres database | `booking` |
+| `JWT_SECRET` | Secret key for signing JWT tokens | `abcd` |
+| `MAIL_NAME` | SMTP email address for sending emails | `noreply@example.com` |
+| `MAIL_PASSWORD` | SMTP password or app-specific password | `xxxx xxxx xxxx xxxx` |
+| `MAIL_SERVER` | SMTP service | `smtp.gmail.com` |
 | `PORT` | Server port (optional) | `3000` |
 | `NODE_ENV` | Environment (optional) | `development` or `production` |
 

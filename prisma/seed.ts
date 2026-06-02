@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from 'pg';
+import bcrypt from "bcrypt";
 import 'dotenv/config'
 
 
@@ -191,6 +192,240 @@ async function main() {
     }
 
     console.log('Seed completed - seeded all available tables')
+
+        const demoPassword = await bcrypt.hash("Demo1234!", 10);
+
+    await prisma.user.createMany({
+        data: [
+            {
+                id: 1,
+                email: "guest1@example.com",
+                firstName: "Guest",
+                lastName: "One",
+                passwordHash: demoPassword,
+                accountVerified: true,
+                roleId: 1
+            },
+            {
+                id: 2,
+                email: "guest2@example.com",
+                firstName: "Guest",
+                lastName: "Two",
+                passwordHash: demoPassword,
+                accountVerified: true,
+                roleId: 1
+            },
+            {
+                id: 3,
+                email: "host1@example.com",
+                firstName: "Host",
+                lastName: "One",
+                passwordHash: demoPassword,
+                accountVerified: true,
+                roleId: 2
+            },
+            {
+                id: 4,
+                email: "host2@example.com",
+                firstName: "Host",
+                lastName: "Two",
+                passwordHash: demoPassword,
+                accountVerified: true,
+                roleId: 2
+            }
+        ],
+        skipDuplicates: true
+    });
+
+    await prisma.property.upsert({
+        where: { id: 1 },
+        update: {},
+        create: {
+            id: 1,
+            name: "Sunny City Flat",
+            rating: 4,
+            avgReviews: 4.2,
+            ownerId: 3,
+            statusId: 1,
+            propertyTypeId: 1,
+            propertyDescription: "A bright demo apartment close to the demo city center.",
+            ownerDescription: "Friendly demo host with demo local recommendations.",
+            surroundingsDescription: "Near demo restaurants, demo tram stop, and demo parks.",
+            address: {
+                create: {
+                    latitude: 50.06465,
+                    longitude: 19.94498,
+                    country: "Poland",
+                    city: "Kraków",
+                    street: "Demo Street 1",
+                    postalCode: "31-000"
+                }
+            },
+            amenities: {
+                create: [
+                    { amenityTypeId: 15 },
+                    { amenityTypeId: 16 },
+                    { amenityTypeId: 12 }
+                ]
+            },
+            spokenLanguages: {
+                create: [
+                    { languageTypeId: 1 },
+                    { languageTypeId: 2 }
+                ]
+            },
+            images: {
+                create: [
+                    { path: "/uploads/demo1.png", isMain: true }
+                ]
+            },
+            rooms: {
+                create: [
+                    {
+                        id: 1,
+                        name: "Standard Room",
+                        capacity: 2,
+                        area: 18,
+                        smokingAllowed: false,
+                        bathroomPrivate: true,
+                        beds: {
+                            create: [{ typeId: 2, count: 1 }]
+                        },
+                        amenities: {
+                            create: [
+                                { amenityTypeId: 10 },
+                                { amenityTypeId: 13 }
+                            ]
+                        },
+                        pricing: {
+                            create: { price: 120.0 }
+                        }
+                    },
+                    {
+                        id: 2,
+                        name: "Family Room",
+                        capacity: 4,
+                        area: 28,
+                        smokingAllowed: false,
+                        bathroomPrivate: true,
+                        beds: {
+                            create: [{ typeId: 2, count: 2 }]
+                        },
+                        amenities: {
+                            create: [
+                                { amenityTypeId: 12 },
+                                { amenityTypeId: 15 }
+                            ]
+                        },
+                        pricing: {
+                            create: { price: 190.0 }
+                        }
+                    }
+                ]
+            }
+        }
+    });
+
+    await prisma.property.upsert({
+        where: { id: 2 },
+        update: {},
+        create: {
+            id: 2,
+            name: "Cozy demo Countryside House",
+            rating: 5,
+            avgReviews: 4.8,
+            ownerId: 4,
+            statusId: 1,
+            propertyTypeId: 16,
+            propertyDescription: "Quiet demo home with demo garden and demo countryside views.",
+            ownerDescription: "Perfect for demo weekend stays and demo nature lovers.",
+            surroundingsDescription: "Close to demo hiking trails and demo local bakery.",
+            address: {
+                create: {
+                    latitude: 50.12345,
+                    longitude: 19.98765,
+                    country: "Poland",
+                    city: "Wieliczka",
+                    street: "Demo Lane 2",
+                    postalCode: "32-020"
+                }
+            },
+            amenities: {
+                create: [
+                    { amenityTypeId: 7 },
+                    { amenityTypeId: 8 },
+                    { amenityTypeId: 15 }
+                ]
+            },
+            spokenLanguages: {
+                create: [
+                    { languageTypeId: 1 },
+                    { languageTypeId: 2 }
+                ]
+            },
+            images: {
+                create: [
+                    { path: "/uploads/demo2.png", isMain: true }
+                ]
+            },
+            rooms: {
+                create: [
+                    {
+                        id: 3,
+                        name: "Garden Room",
+                        capacity: 2,
+                        area: 20,
+                        smokingAllowed: false,
+                        bathroomPrivate: true,
+                        beds: {
+                            create: [{ typeId: 2, count: 1 }]
+                        },
+                        amenities: {
+                            create: [
+                                { amenityTypeId: 7 },
+                                { amenityTypeId: 11 }
+                            ]
+                        },
+                        pricing: {
+                            create: { price: 150.0 }
+                        }
+                    }
+                ]
+            }
+        }
+    });
+
+    await prisma.booking.upsert({
+        where: { id: 1 },
+        update: {},
+        create: {
+            id: 1,
+            statusId: 2,
+            roomId: 1,
+            userId: 1,
+            checkIn: new Date("2026-06-10T14:00:00.000Z"),
+            checkOut: new Date("2026-06-12T11:00:00.000Z"),
+            guestCount: 2,
+            totalPrice: 240.0
+        }
+    });
+
+    await prisma.booking.upsert({
+        where: { id: 2 },
+        update: {},
+        create: {
+            id: 2,
+            statusId: 1,
+            roomId: 3,
+            userId: 2,
+            checkIn: new Date("2026-07-05T14:00:00.000Z"),
+            checkOut: new Date("2026-07-08T11:00:00.000Z"),
+            guestCount: 2,
+            totalPrice: 450.0
+        }
+    });
+
+    console.log("Added demo data (hopefully)")
 }
 
 main()
